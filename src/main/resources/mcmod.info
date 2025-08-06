@@ -1,0 +1,16 @@
+[
+{
+  "modid": "lunachat_like",
+  "name": "Romeletter to japanese",
+  "description": "",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["WagglyZebra9743"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
