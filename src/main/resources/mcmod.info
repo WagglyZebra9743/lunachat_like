@@ -1,8 +1,8 @@
 [
 {
   "modid": "lunachat_like",
-  "name": "Romeletter to japanese",
-  "description": "",
+  "name": "lunachat like ",
+  "description": "\u30ed\u30fc\u30de\u5b57\u3092\u65e5\u672c\u8a9e\u306b\u5909\u63db\u3059\u308bmod",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",

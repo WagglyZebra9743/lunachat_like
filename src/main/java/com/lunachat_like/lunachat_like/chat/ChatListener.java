@@ -3,6 +3,8 @@ package com.lunachat_like.lunachat_like.chat;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.lunachat_like.lunachat_like.lunachat_like;
+
 import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -21,6 +23,7 @@ public class ChatListener {
         ROMAJI_MAP.put("jjya", "っじゃ"); ROMAJI_MAP.put("jjyu", "っじゅ"); ROMAJI_MAP.put("jjyo", "っじょ");
         ROMAJI_MAP.put("cchi", "っち");   ROMAJI_MAP.put("ttsu", "っつ");
         ROMAJI_MAP.put("ccha", "っちゃ"); ROMAJI_MAP.put("cchu", "っちゅ"); ROMAJI_MAP.put("ccho", "っちょ");
+        ROMAJI_MAP.put("ttya", "っちゃ"); ROMAJI_MAP.put("ttyu", "っちゅ"); ROMAJI_MAP.put("ttyo", "っちょ");
         ROMAJI_MAP.put("ddya", "っぢゃ"); ROMAJI_MAP.put("ddyu", "っぢゅ"); ROMAJI_MAP.put("ddyo", "っぢょ");
         ROMAJI_MAP.put("ttsa", "っつぁ"); ROMAJI_MAP.put("ttsi", "っつぃ"); ROMAJI_MAP.put("ttse", "っつぇ"); ROMAJI_MAP.put("ttso", "っつぉ");
         ROMAJI_MAP.put("nnya", "っにゃ"); ROMAJI_MAP.put("nnyu", "っにゅ"); ROMAJI_MAP.put("nnyo", "っにょ");
@@ -35,6 +38,7 @@ public class ChatListener {
         ROMAJI_MAP.put("gya", "ぎゃ"); ROMAJI_MAP.put("gyu", "ぎゅ"); ROMAJI_MAP.put("gyo", "ぎょ");
         ROMAJI_MAP.put("shi", "し");
         ROMAJI_MAP.put("sya", "しゃ"); ROMAJI_MAP.put("syu", "しゅ"); ROMAJI_MAP.put("syo", "しょ");
+        ROMAJI_MAP.put("sha", "しゃ"); ROMAJI_MAP.put("shu", "しゅ"); ROMAJI_MAP.put("sho", "しょ");
         ROMAJI_MAP.put("sye", "しぇ");
         ROMAJI_MAP.put("zya", "じゃ"); ROMAJI_MAP.put("zyu", "じゅ"); ROMAJI_MAP.put("zyo", "じょ");
         ROMAJI_MAP.put("jya", "じゃ"); ROMAJI_MAP.put("jyu", "じゅ"); ROMAJI_MAP.put("jyo", "じょ");
@@ -154,8 +158,11 @@ public class ChatListener {
     private static String messagePart = "";
     @SubscribeEvent
     public void ChatReceived(ClientChatReceivedEvent event) {
+    	if(!lunachat_like.enable)return;
     	message = event.message.getUnformattedText(); // 色コードや装飾を除去したテキスト
-    	
+    	String colormessage = event.message.getFormattedText();
+    	if(colormessage.startsWith("§r§b")||colormessage.startsWith("§c"))return;
+    	System.out.println("colortext:"+colormessage);
     	String kanjimessage = "";
     	String jpmessage = "";
     	int colonIndex = message.indexOf(": ");

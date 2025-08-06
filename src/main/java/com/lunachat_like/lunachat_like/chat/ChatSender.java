@@ -4,6 +4,8 @@ import java.lang.reflect.Field;
 
 import org.lwjgl.input.Keyboard;
 
+import com.lunachat_like.lunachat_like.lunachat_like;
+
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -28,7 +30,7 @@ public class ChatSender {
     public void onKeyInput(GuiScreenEvent.KeyboardInputEvent.Pre event) {
         // チャットGUIでEnterキーが押された時だけ処理
         if (event.gui instanceof GuiChat && Keyboard.getEventKey() == Keyboard.KEY_RETURN) {
-
+        	if(!lunachat_like.enable)return;
             try {
                 // リフレクションでテキストフィールドを取得
                 GuiTextField textField = (GuiTextField) inputField.get(event.gui);
