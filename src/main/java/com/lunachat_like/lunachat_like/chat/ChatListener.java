@@ -161,15 +161,22 @@ public class ChatListener {
     	if(!lunachat_like.enable)return;
     	message = event.message.getUnformattedText(); // 色コードや装飾を除去したテキスト
     	String colormessage = event.message.getFormattedText();
-    	if(colormessage.startsWith("§r§b")||colormessage.startsWith("§c"))return;
     	System.out.println("colortext:"+colormessage);
+    	if((colormessage.startsWith("§r§b")&&!colormessage.startsWith("§r§b[ClanChat]"))||colormessage.startsWith("§c"))return;
+    	if(!colormessage.contains("§r§f : ")&&!colormessage.contains("§r§f: ")&&!colormessage.contains("た: ")&&!colormessage.contains("§r§b[ClanChat]")) {
+    		System.out.println("not chat msg");
+    		return;
+    	}
     	String kanjimessage = "";
     	String jpmessage = "";
     	int colonIndex = message.indexOf(": ");
         if (colonIndex != -1 && colonIndex + 2 < message.length()) {
             messagePart = message.substring(colonIndex + 2);
         }else return;
-        if(messagePart==null||messagePart.isEmpty()||containsJapanese(messagePart)||containsColorCode(messagePart))return;
+        if(messagePart==null||messagePart.isEmpty()||containsJapanese(messagePart)||(containsColorCode(messagePart)&&!colormessage.endsWith("§r"))) {
+        	System.out.println("not need text change");
+        	return;
+        }
     	jpmessage = toHiragana(messagePart);
     	kanjimessage = DictionaryManager.convertToKanji(jpmessage);
     	if(kanjimessage!=null&&!kanjimessage.isEmpty()) {
