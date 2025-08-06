@@ -82,6 +82,7 @@ public class DictionaryManager {
             out.println("ふういん=封印");
             out.println("めいかい=冥界");
             out.println("ついおく=追憶");
+            out.println("ここり=ココリ");
             
             //武器関連
             out.println("# 武器関連");
