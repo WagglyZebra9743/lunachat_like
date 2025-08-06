@@ -76,7 +76,17 @@ public class ChatListener {
         ROMAJI_MAP.put("vvu", "っゔ");
         ROMAJI_MAP.put("vve", "っゔぇ");
         ROMAJI_MAP.put("vvo", "っゔぉ");
+        
+        //3文字(小さくなるやつ)
+        ROMAJI_MAP.put("xtu","っ"); ROMAJI_MAP.put("ltu","っ");
+        ROMAJI_MAP.put("xya","ゃ"); ROMAJI_MAP.put("xyu","ゅ"); ROMAJI_MAP.put("xyo","ょ"); 
+        ROMAJI_MAP.put("lya","ゃ"); ROMAJI_MAP.put("lyu","ゅ"); ROMAJI_MAP.put("lyo","ょ"); 
 
+        //2文字(小さくなるやつ)
+        ROMAJI_MAP.put("xa","ぁ"); ROMAJI_MAP.put("xi","ぃ"); ROMAJI_MAP.put("xu","ぅ"); ROMAJI_MAP.put("xe","ぇ"); ROMAJI_MAP.put("xo","ぉ");
+        ROMAJI_MAP.put("la","ぁ"); ROMAJI_MAP.put("li","ぃ"); ROMAJI_MAP.put("lu","ぅ"); ROMAJI_MAP.put("le","ぇ"); ROMAJI_MAP.put("lo","ぉ");
+        
+        
      // 2文字
         ROMAJI_MAP.put("ka", "か"); ROMAJI_MAP.put("ki", "き"); ROMAJI_MAP.put("ku", "く"); ROMAJI_MAP.put("ke", "け"); ROMAJI_MAP.put("ko", "こ");
         ROMAJI_MAP.put("ga", "が"); ROMAJI_MAP.put("gi", "ぎ"); ROMAJI_MAP.put("gu", "ぐ"); ROMAJI_MAP.put("ge", "げ"); ROMAJI_MAP.put("go", "ご");
