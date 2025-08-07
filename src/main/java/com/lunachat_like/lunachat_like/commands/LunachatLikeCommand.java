@@ -54,6 +54,7 @@ public class LunachatLikeCommand extends CommandBase {
             case "reload":
             	sender.addChatMessage(new ChatComponentText("§a[lunachat_like]§7変換辞書の再度読み込みを実行します"));
             	DictionaryManager.reloadDictionary();
+            	break;
             	
 
             case "help":

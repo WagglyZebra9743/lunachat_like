@@ -45,7 +45,8 @@ public class ChatSender {
                     // ローマ字変換処理
                 	String jpmessage = ChatListener.toHiragana(currentMessage);
                 	String kanjimessage = DictionaryManager.convertToKanji(jpmessage);//ローマ字→ひらがな
-                    String convertedMessage = currentMessage +" (" + kanjimessage+")"; // ひらがな→単語変換
+                    if(kanjimessage==null||kanjimessage.isEmpty()||kanjimessage=="")return;
+                	String convertedMessage = currentMessage +" (" + kanjimessage+")"; // ひらがな→単語変換
 
                     // テキストフィールドのテキストを直接書き換える
                     textField.setText(convertedMessage);

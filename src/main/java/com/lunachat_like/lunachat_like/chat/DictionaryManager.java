@@ -39,12 +39,12 @@ public class DictionaryManager {
     
     public static void reloadDictionary() {
         if (dictFile == null) {
-        	Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("§c[lunachat_like] 変換辞書の読み込みに失敗しました 再起動することで改善する可能性があります"));
+        	Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("§c[lunachat_like]変換辞書の読み込みに失敗しました 再起動することで改善する可能性があります"));
             return;
         }
         try {
             readDictionary(dictFile);
-            Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("§a[lunachat_like]§7 変換辞書を再読み込みしました (" + KANJI_ENTRIES.size() + " 件)"));
+            Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("§a[lunachat_like]§7変換辞書を再読み込みしました (" + KANJI_ENTRIES.size() + " 件)"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -74,6 +74,11 @@ public class DictionaryManager {
             out.println("なぐり=殴り");
             out.println("ぷり=プリ");
             out.println("ばたし=バタシ");
+            out.println("あか=赤");
+            out.println("あお=青");
+            out.println("みどり=緑");
+            out.println("かぎ=カギ");
+            out.println("がらす=ガラス");
             
             //ダンジョン名関連
             out.println("# ダンジョン名関連");
@@ -145,6 +150,18 @@ public class DictionaryManager {
             out.println("べるふぉーと=ベルフォート");
             out.println("くらんはうす=クランハウス");
             
+            //敵mob名
+            out.println("# 敵mob名");
+            out.println("ぞんび=ゾンビ");
+            out.println("ぞん=ゾン");
+            out.println("すけるとん=スケルトン");
+            out.println("すけ=スケ");
+            out.println("くも=クモ");
+            out.println("せいぶつ=生物");
+            out.println("うぃっち=ウィッチ");
+            out.println("がーでぃあん=ガーディアン");
+            out.println("ごーれむ=ゴーレム");
+            
             //その他
             out.println("# その他");
             out.println("てんせい=転生");
@@ -155,6 +172,13 @@ public class DictionaryManager {
             out.println("ばぐ=バグ");
             out.println("ぼてん=補填");
             out.println("どうが=動画");
+            
+            
+            //不具合修正
+            out.println("# 不具合修正用パッチ");
+            out.println("gg=");
+            out.println("gf=");
+            out.println("()=");
         }
     }
 

@@ -33,6 +33,7 @@ public class ChatListener {
         ROMAJI_MAP.put("mmya", "っみゃ"); ROMAJI_MAP.put("mmyu", "っみゅ"); ROMAJI_MAP.put("mmyo", "っみょ");
         ROMAJI_MAP.put("rrya", "っりゃ"); ROMAJI_MAP.put("rryu", "っりゅ"); ROMAJI_MAP.put("rryo", "っりょ");
         
+        
         // 3文字
         ROMAJI_MAP.put("kya", "きゃ"); ROMAJI_MAP.put("kyu", "きゅ"); ROMAJI_MAP.put("kyo", "きょ");
         ROMAJI_MAP.put("gya", "ぎゃ"); ROMAJI_MAP.put("gyu", "ぎゅ"); ROMAJI_MAP.put("gyo", "ぎょ");
@@ -173,7 +174,7 @@ public class ChatListener {
         if (colonIndex != -1 && colonIndex + 2 < message.length()) {
             messagePart = message.substring(colonIndex + 2);
         }else return;
-        if(messagePart==null||messagePart.isEmpty()||containsJapanese(messagePart)||(containsColorCode(messagePart)&&!colormessage.endsWith("§r"))) {
+        if(messagePart==null||messagePart.isEmpty()||containsJapanese(messagePart)||(containsColorCode(messagePart)&&!colormessage.endsWith("§r"))||messagePart.equals("gg")||messagePart.equals("gf")||messagePart.equals("gg )")||messagePart.equals("gf ()")||messagePart.equals("gg (gg)")||messagePart.equals("gf (gf)")) {
         	System.out.println("not need text change");
         	return;
         }
