@@ -14,15 +14,17 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.ChatComponentText;
 
 public class DictionaryManager {
 
     private static List<Map.Entry<String, String>> KANJI_ENTRIES; 
     private static final String FILE_NAME = "lunachat_dict.txt";
+    private static File dictFile;
 
     public static void loadDictionary() {
         File configDir = new File(Minecraft.getMinecraft().mcDataDir, "config");
-        File dictFile = new File(configDir, FILE_NAME);
+        dictFile = new File(configDir, FILE_NAME);
 
         try {
             if (!dictFile.exists()) {
@@ -30,6 +32,19 @@ public class DictionaryManager {
                 createDefaultDictionary(dictFile);
             }
             readDictionary(dictFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static void reloadDictionary() {
+        if (dictFile == null) {
+        	Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("§c[lunachat_like] 変換辞書の読み込みに失敗しました 再起動することで改善する可能性があります"));
+            return;
+        }
+        try {
+            readDictionary(dictFile);
+            Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("§a[lunachat_like]§7 変換辞書を再読み込みしました (" + KANJI_ENTRIES.size() + " 件)"));
         } catch (IOException e) {
             e.printStackTrace();
         }

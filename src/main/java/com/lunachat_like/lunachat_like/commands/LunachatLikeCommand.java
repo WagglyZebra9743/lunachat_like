@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.lunachat_like.lunachat_like.lunachat_like;
+import com.lunachat_like.lunachat_like.chat.DictionaryManager;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommand;
@@ -28,13 +29,13 @@ public class LunachatLikeCommand extends CommandBase {
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "/jp <on/off/help>";
+        return "/jp <on/off/reload/help>";
     }
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
         if (args.length == 0) {
-            sender.addChatMessage(new ChatComponentText("§c使用方法: /jp <on/off/help>"));
+            sender.addChatMessage(new ChatComponentText("§c使用方法: /jp <on/off/reload/help>"));
             return;
         }
 
@@ -50,12 +51,17 @@ public class LunachatLikeCommand extends CommandBase {
             	lunachat_like.enable = false;
             	sender.addChatMessage(new ChatComponentText("§a[lunachat_like]§7ローマ字変換を無効にしました"));
                 break;
+            case "reload":
+            	sender.addChatMessage(new ChatComponentText("§a[lunachat_like]§7変換辞書の再度読み込みを実行します"));
+            	DictionaryManager.reloadDictionary();
+            	
 
             case "help":
             	
                 sender.addChatMessage(new ChatComponentText("§a---- [lunachat_like] コマンド一覧 ----"));
                 sender.addChatMessage(new ChatComponentText("§7/jp on - ローマ字変換をします"));
                 sender.addChatMessage(new ChatComponentText("§7/jp off - ローマ字変換を停止します"));
+                sender.addChatMessage(new ChatComponentText("§7/jp reload - 変換辞書(config/lunachat_dict.txt)を再度読み込みします"));
                 sender.addChatMessage(new ChatComponentText("§7/jp help - この一覧を表示します"));
                 break;
            
@@ -91,6 +97,7 @@ public class LunachatLikeCommand extends CommandBase {
             List<String> options = new ArrayList<>();
             options.add("on");
             options.add("off");
+            options.add("reload");
             options.add("help");
             return getListOfStringsMatchingLastWord(args, options.toArray(new String[0]));
         }
