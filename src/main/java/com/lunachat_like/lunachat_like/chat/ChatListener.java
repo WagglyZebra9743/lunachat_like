@@ -16,7 +16,7 @@ public class ChatListener {
     	//4文字(っが前に入る3文字)
     	ROMAJI_MAP.put("kkya", "っきゃ"); ROMAJI_MAP.put("kkyu", "っきゅ"); ROMAJI_MAP.put("kkyo", "っきょ");
         ROMAJI_MAP.put("ggya", "っぎゃ"); ROMAJI_MAP.put("ggyu", "っぎゅ"); ROMAJI_MAP.put("ggyo", "っぎょ");
-        ROMAJI_MAP.put("shi", "っし");
+        ROMAJI_MAP.put("sshi", "っし");
         ROMAJI_MAP.put("ssya", "っしゃ"); ROMAJI_MAP.put("ssyu", "っしゅ"); ROMAJI_MAP.put("ssyo", "っしょ");
         ROMAJI_MAP.put("ssye", "っしぇ");
         ROMAJI_MAP.put("zzya", "っじゃ"); ROMAJI_MAP.put("zzyu", "っじゅ"); ROMAJI_MAP.put("zzyo", "っじょ");
@@ -33,6 +33,8 @@ public class ChatListener {
         ROMAJI_MAP.put("mmya", "っみゃ"); ROMAJI_MAP.put("mmyu", "っみゅ"); ROMAJI_MAP.put("mmyo", "っみょ");
         ROMAJI_MAP.put("rrya", "っりゃ"); ROMAJI_MAP.put("rryu", "っりゅ"); ROMAJI_MAP.put("rryo", "っりょ");
         
+        //一部の特殊単語
+        ROMAJI_MAP.put("boss", "ボス"); ROMAJI_MAP.put("wave", "ウェーブ"); ROMAJI_MAP.put("rush", "ラッシュ");
         
         // 3文字
         ROMAJI_MAP.put("kya", "きゃ"); ROMAJI_MAP.put("kyu", "きゅ"); ROMAJI_MAP.put("kyo", "きょ");
@@ -45,6 +47,7 @@ public class ChatListener {
         ROMAJI_MAP.put("jya", "じゃ"); ROMAJI_MAP.put("jyu", "じゅ"); ROMAJI_MAP.put("jyo", "じょ");
         ROMAJI_MAP.put("chi", "ち");   ROMAJI_MAP.put("tsu", "つ");
         ROMAJI_MAP.put("cha", "ちゃ"); ROMAJI_MAP.put("chu", "ちゅ"); ROMAJI_MAP.put("cho", "ちょ");
+        ROMAJI_MAP.put("tya", "ちゃ"); ROMAJI_MAP.put("tyu", "ちゅ"); ROMAJI_MAP.put("tyo", "ちょ");
         ROMAJI_MAP.put("dya", "ぢゃ"); ROMAJI_MAP.put("dyu", "ぢゅ"); ROMAJI_MAP.put("dyo", "ぢょ");
         ROMAJI_MAP.put("tsa", "つぁ"); ROMAJI_MAP.put("tsi", "つぃ"); ROMAJI_MAP.put("tse", "つぇ"); ROMAJI_MAP.put("tso", "つぉ");
         ROMAJI_MAP.put("nya", "にゃ"); ROMAJI_MAP.put("nyu", "にゅ"); ROMAJI_MAP.put("nyo", "にょ");
@@ -86,10 +89,14 @@ public class ChatListener {
         ROMAJI_MAP.put("xtu","っ"); ROMAJI_MAP.put("ltu","っ");
         ROMAJI_MAP.put("xya","ゃ"); ROMAJI_MAP.put("xyu","ゅ"); ROMAJI_MAP.put("xyo","ょ"); 
         ROMAJI_MAP.put("lya","ゃ"); ROMAJI_MAP.put("lyu","ゅ"); ROMAJI_MAP.put("lyo","ょ"); 
+        
+      //一部特殊単語
+        ROMAJI_MAP.put("dia", "ダイヤ"); 
 
         //2文字(小さくなるやつ)
         ROMAJI_MAP.put("xa","ぁ"); ROMAJI_MAP.put("xi","ぃ"); ROMAJI_MAP.put("xu","ぅ"); ROMAJI_MAP.put("xe","ぇ"); ROMAJI_MAP.put("xo","ぉ");
         ROMAJI_MAP.put("la","ぁ"); ROMAJI_MAP.put("li","ぃ"); ROMAJI_MAP.put("lu","ぅ"); ROMAJI_MAP.put("le","ぇ"); ROMAJI_MAP.put("lo","ぉ");
+        
         
         
      // 2文字

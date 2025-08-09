@@ -103,6 +103,7 @@ public class DictionaryManager {
             out.println("めいかい=冥界");
             out.println("ついおく=追憶");
             out.println("ここり=ココリ");
+            out.println("さかい=砂海");
             
             //武器関連
             out.println("# 武器関連");
@@ -118,6 +119,9 @@ public class DictionaryManager {
             out.println("せいけん=聖剣");
             out.println("めいけん=冥剣");
             out.println("きのこけん=キノコ剣");
+            out.println("けん=剣");
+            out.println("ゆみ=弓");
+            out.println("つえ=杖");
             
             //乗り物関連
             out.println("# 乗り物関連");
@@ -172,13 +176,30 @@ public class DictionaryManager {
             out.println("ばぐ=バグ");
             out.println("ぼてん=補填");
             out.println("どうが=動画");
+            out.println("つり=釣り");
+            out.println("さかな=魚");
+            out.println("さいくつ=採掘");
+            out.println("せきたん=石炭");
+            out.println("だいや=ダイヤ");
+            out.println("あかいし=赤石");
             
             
-            //不具合修正
-            out.println("# 不具合修正用パッチ");
+            //不具合修正1.1
+            out.println("# 不具合修正用パッチ(1.1)");
             out.println("gg=");
             out.println("gf=");
             out.println("()=");
+            
+            //不具合修正1.2
+            out.println("# 不具合修正用パッチ(1.2)");
+            out.println("sし=っし");
+            out.println("tや=ちゃ");
+            out.println("tゆ=ちゅ");
+            out.println("tよ=ちょ");
+            out.println("ぼss=ボス");
+            out.println("るsh=ラッシュ");
+            out.println("わゔぇ=ウェーブ");
+            
         }
     }
 
