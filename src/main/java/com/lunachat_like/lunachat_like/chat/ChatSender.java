@@ -15,6 +15,8 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class ChatSender {
 
+    public static boolean enable = true;
+
     private static Field inputField;
     static {
         try {
@@ -30,7 +32,7 @@ public class ChatSender {
     public void onKeyInput(GuiScreenEvent.KeyboardInputEvent.Pre event) {
         // チャットGUIでEnterキーが押された時だけ処理
         if (event.gui instanceof GuiChat && Keyboard.getEventKey() == Keyboard.KEY_RETURN) {
-        	if(!lunachat_like.enable)return;
+        	if(!enable)return;
             try {
                 // リフレクションでテキストフィールドを取得
                 GuiTextField textField = (GuiTextField) inputField.get(event.gui);
