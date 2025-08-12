@@ -93,6 +93,10 @@ public class ChatListener {
       //一部特殊単語
         ROMAJI_MAP.put("dia", "ダイヤ"); 
 
+		//一部特殊単語
+		ROMAJI_MAP.put("gg","");
+		ROMAJI_MAP.put("gf","");
+
         //2文字(小さくなるやつ)
         ROMAJI_MAP.put("xa","ぁ"); ROMAJI_MAP.put("xi","ぃ"); ROMAJI_MAP.put("xu","ぅ"); ROMAJI_MAP.put("xe","ぇ"); ROMAJI_MAP.put("xo","ぉ");
         ROMAJI_MAP.put("la","ぁ"); ROMAJI_MAP.put("li","ぃ"); ROMAJI_MAP.put("lu","ぅ"); ROMAJI_MAP.put("le","ぇ"); ROMAJI_MAP.put("lo","ぉ");
@@ -152,9 +156,10 @@ public class ChatListener {
 
         return result;
     }
+	public static boolean enable = true;
  // 日本語判定（ひらがな、カタカナ、漢字が含まれているか）
     public static boolean containsJapanese(String text) {
-        return text.matches(".*[\\u3040-\\u30FF\\u4E00-\\u9FFF].*");
+        return text.matches(".*[\\u3040-\\u30FF\\u4E00-\\u9FFF\\uFF65-\\uFF9F].*");
     }
 
     // カラーコード判定（Minecraftカラーコード§が含まれるか）
@@ -166,7 +171,7 @@ public class ChatListener {
     private static String messagePart = "";
     @SubscribeEvent
     public void ChatReceived(ClientChatReceivedEvent event) {
-    	if(!lunachat_like.enable)return;
+    	if(!enable)return;
     	message = event.message.getUnformattedText(); // 色コードや装飾を除去したテキスト
     	String colormessage = event.message.getFormattedText();
     	System.out.println("colortext:"+colormessage);
@@ -175,6 +180,7 @@ public class ChatListener {
     		System.out.println("not chat msg");
     		return;
     	}
+		
     	String kanjimessage = "";
     	String jpmessage = "";
     	int colonIndex = message.indexOf(": ");
@@ -185,6 +191,7 @@ public class ChatListener {
         	System.out.println("not need text change");
         	return;
         }
+		if(messagePart.startwith("gg")||messagePart.startwith("gf")||messagePart.startwith("nc"))
     	jpmessage = toHiragana(messagePart);
     	kanjimessage = DictionaryManager.convertToKanji(jpmessage);
     	if(kanjimessage!=null&&!kanjimessage.isEmpty()) {
