@@ -6,6 +6,9 @@ import java.util.List;
 
 import com.lunachat_like.lunachat_like.lunachat_like;
 import com.lunachat_like.lunachat_like.chat.DictionaryManager;
+import com.lunachat_like.lunachat_like.chat.ChatListener;
+import com.lunachat_like.lunachat_like.chat.ChatSender;
+
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommand;
@@ -47,8 +50,8 @@ public class LunachatLikeCommand extends CommandBase {
                     ChatListener.enable = false;
                     sender.addChatMessage(new ChatConponentText("§a[lunachat_like]§7受信チャットのローマ字変換を有効にしました"));
                 }else {
-                ChatListener.enable = true;
-                sender.addChatMessage(new ChatComponentText("§a[lunachat_like]§7受信チャットのローマ字変換を有効にしました"));
+                    ChatListener.enable = true;
+                    sender.addChatMessage(new ChatComponentText("§a[lunachat_like]§7受信チャットのローマ字変換を有効にしました"));
                 }
                 break;
 
@@ -57,8 +60,8 @@ public class LunachatLikeCommand extends CommandBase {
                     ChatSender.enable = false;
                     sender.addChatMessage(new ChatConponentText("§a[lunachat_like]§7送信チャットのローマ字変換を有効にしました"));
                 }else {
-                ChatSender.enable = true;
-                sender.addChatMessage(new ChatComponentText("§a[lunachat_like]§7送信チャットのローマ字変換を有効にしました"));
+                    ChatSender.enable = true;
+                    sender.addChatMessage(new ChatComponentText("§a[lunachat_like]§7送信チャットのローマ字変換を有効にしました"));
                 }
                 break;
             case "reload":
