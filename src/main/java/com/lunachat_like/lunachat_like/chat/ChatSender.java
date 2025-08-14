@@ -4,8 +4,6 @@ import java.lang.reflect.Field;
 
 import org.lwjgl.input.Keyboard;
 
-import com.lunachat_like.lunachat_like.lunachat_like;
-
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -14,6 +12,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class ChatSender {
+
+    public static boolean enable = true;
 
     private static Field inputField;
     static {
@@ -30,7 +30,7 @@ public class ChatSender {
     public void onKeyInput(GuiScreenEvent.KeyboardInputEvent.Pre event) {
         // チャットGUIでEnterキーが押された時だけ処理
         if (event.gui instanceof GuiChat && Keyboard.getEventKey() == Keyboard.KEY_RETURN) {
-        	if(!lunachat_like.enable)return;
+        	if(!enable)return;
             try {
                 // リフレクションでテキストフィールドを取得
                 GuiTextField textField = (GuiTextField) inputField.get(event.gui);
@@ -41,12 +41,14 @@ public class ChatSender {
 
                 	
                 	if(ChatListener.containsJapanese(currentMessage))return;
+                	if(currentMessage.startsWith("gg")||currentMessage.startsWith("gf")||currentMessage.startsWith("nc"))return;
                 	
                     // ローマ字変換処理
-                	String jpmessage = ChatListener.toHiragana(currentMessage);
-                	String kanjimessage = DictionaryManager.convertToKanji(jpmessage);//ローマ字→ひらがな
-                    if(kanjimessage==null||kanjimessage.isEmpty()||kanjimessage=="")return;
-                	String convertedMessage = currentMessage +" (" + kanjimessage+")"; // ひらがな→単語変換
+                	String jpmessage = ChatListener.toHiragana(currentMessage);//ローマ字→ひらがな
+                	String kanjimessage = DictionaryManager.convertToKanji(jpmessage);// ひらがな→単語変換
+                    if(kanjimessage==null||kanjimessage.isEmpty()||kanjimessage==""||kanjimessage.equals(currentMessage))return;
+                	String convertedMessage = currentMessage +" (" + kanjimessage+")"; 
+                	
 
                     // テキストフィールドのテキストを直接書き換える
                     textField.setText(convertedMessage);

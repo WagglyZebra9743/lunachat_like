@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.lunachat_like.lunachat_like.lunachat_like;
+import com.lunachat_like.lunachat_like.chat.ChatListener;
+import com.lunachat_like.lunachat_like.chat.ChatSender;
 import com.lunachat_like.lunachat_like.chat.DictionaryManager;
 
 import net.minecraft.command.CommandBase;
@@ -29,27 +30,37 @@ public class LunachatLikeCommand extends CommandBase {
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "/jp <on/off/reload/help>";
+        return "/jp <togglereceive/togglesend/reload/help>";
     }
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
         if (args.length == 0) {
-            sender.addChatMessage(new ChatComponentText("§c使用方法: /jp <on/off/reload/help>"));
+            sender.addChatMessage(new ChatComponentText("§c使用方法: /jp <togglereceive/togglesend/reload/help>"));
             return;
         }
 
         String sub = args[0];
 
         switch (sub.toLowerCase()) {
-            case "on":
-                lunachat_like.enable = true;
-                sender.addChatMessage(new ChatComponentText("§a[lunachat_like]§7ローマ字変換を有効にしました"));
+            case "togglereceive":
+                if(ChatListener.enable){
+                    ChatListener.enable = false;
+                    sender.addChatMessage(new ChatComponentText("§a[lunachat_like]§7受信チャットのローマ字変換を無効にしました"));
+                }else {
+                    ChatListener.enable = true;
+                    sender.addChatMessage(new ChatComponentText("§a[lunachat_like]§7受信チャットのローマ字変換を有効にしました"));
+                }
                 break;
 
-            case "off":
-            	lunachat_like.enable = false;
-            	sender.addChatMessage(new ChatComponentText("§a[lunachat_like]§7ローマ字変換を無効にしました"));
+            case "togglesend":
+                if(ChatSender.enable){
+                    ChatSender.enable = false;
+                    sender.addChatMessage(new ChatComponentText("§a[lunachat_like]§7送信チャットのローマ字変換を無効にしました"));
+                }else {
+                    ChatSender.enable = true;
+                    sender.addChatMessage(new ChatComponentText("§a[lunachat_like]§7送信チャットのローマ字変換を有効にしました"));
+                }
                 break;
             case "reload":
             	sender.addChatMessage(new ChatComponentText("§a[lunachat_like]§7変換辞書の再度読み込みを実行します"));
@@ -60,8 +71,8 @@ public class LunachatLikeCommand extends CommandBase {
             case "help":
             	
                 sender.addChatMessage(new ChatComponentText("§a---- [lunachat_like] コマンド一覧 ----"));
-                sender.addChatMessage(new ChatComponentText("§7/jp on - ローマ字変換をします"));
-                sender.addChatMessage(new ChatComponentText("§7/jp off - ローマ字変換を停止します"));
+                sender.addChatMessage(new ChatComponentText("§7/jp togglereceive - 受信チャット（橙色）のローマ字変換を切り替えます"));
+                sender.addChatMessage(new ChatComponentText("§7/jp togglesend - 送信チャット（自分）のローマ字変換を切り替えます"));
                 sender.addChatMessage(new ChatComponentText("§7/jp reload - 変換辞書(config/lunachat_dict.txt)を再度読み込みします"));
                 sender.addChatMessage(new ChatComponentText("§7/jp help - この一覧を表示します"));
                 break;
@@ -96,8 +107,8 @@ public class LunachatLikeCommand extends CommandBase {
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
         if (args.length == 1) {
             List<String> options = new ArrayList<>();
-            options.add("on");
-            options.add("off");
+            options.add("togglereceive");
+            options.add("togglesend");
             options.add("reload");
             options.add("help");
             return getListOfStringsMatchingLastWord(args, options.toArray(new String[0]));
