@@ -3,8 +3,6 @@ package com.lunachat_like.lunachat_like.chat;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.lunachat_like.lunachat_like.lunachat_like;
-
 import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -173,30 +171,46 @@ public class ChatListener {
     public void ChatReceived(ClientChatReceivedEvent event) {
     	if(!enable)return;
     	message = event.message.getUnformattedText(); // 色コードや装飾を除去したテキスト
-    	String colormessage = event.message.getFormattedText();
+    	
+    	String colormessage = event.message.getFormattedText();//デバッグ用パート
     	System.out.println("colortext:"+colormessage);
+    	
+    	//現状見つけたエラーメッセージを除外しようとしている
     	if((colormessage.startsWith("§r§b")&&!colormessage.startsWith("§r§b[ClanChat]"))||colormessage.startsWith("§c"))return;
+    	//通常チャット パーティーチャット 個人チャット クランチャット以外なら終わり
     	if(!colormessage.contains("§r§f : ")&&!colormessage.contains("§r§f: ")&&!colormessage.contains("た: ")&&!colormessage.contains("§r§b[ClanChat]")) {
     		System.out.println("not chat msg");
     		return;
     	}
 		
+    	//変数初期化
     	String kanjimessage = "";
     	String jpmessage = "";
-    	int colonIndex = message.indexOf(": ");
-        if (colonIndex != -1 && colonIndex + 2 < message.length()) {
+    	
+    	//全てのチャットに共通して: の後がチャットメッセージである
+    	int colonIndex = message.indexOf(": ");//まずそれが何文字目にあるかを取得する
+        if (colonIndex != -1 && colonIndex + 2 < message.length()) {//その後ろを格納する
             messagePart = message.substring(colonIndex + 2);
-        }else return;
-        if(messagePart==null||messagePart.isEmpty()||containsJapanese(messagePart)||(containsColorCode(messagePart)&&!colormessage.endsWith("§r"))||messagePart.equals("gg")||messagePart.equals("gf")||messagePart.equals("gg )")||messagePart.equals("gf ()")||messagePart.equals("gg (gg)")||messagePart.equals("gf (gf)")) {
+        }else return;//: がないなら終わり
+        
+        //null,なし,日本語あり,色コードあり(rをのぞく)
+        if(messagePart==null||messagePart.isEmpty()||containsJapanese(messagePart)||(containsColorCode(messagePart)&&!colormessage.endsWith("§r"))) {
         	System.out.println("not need text change");
         	return;
         }
-		if(messagePart.startwith("gg")||messagePart.startwith("gf")||messagePart.startwith("nc"))
+        //単語系除外
+		if(messagePart.startsWith("gg")||messagePart.startsWith("gf")||messagePart.startsWith("nc"))return;
+		
+		//ローマ字→ひらがな→漢字変換
     	jpmessage = toHiragana(messagePart);
     	kanjimessage = DictionaryManager.convertToKanji(jpmessage);
-    	if(kanjimessage!=null&&!kanjimessage.isEmpty()) {
-    		event.message.appendSibling(new ChatComponentText(" §6(" + kanjimessage + ")"));
-    		}
+    	
+    	//漢字変換したものと元メッセージが同じなら終わり
+    	if(kanjimessage==null||kanjimessage.isEmpty()||kanjimessage==""||kanjimessage.equals(messagePart))return;
+    	
+    	//チャットの後ろに付け加える
+    	event.message.appendSibling(new ChatComponentText(" §6(" + kanjimessage + ")"));
+
         }
     
 
