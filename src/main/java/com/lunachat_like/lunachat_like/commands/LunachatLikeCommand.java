@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.lunachat_like.lunachat_like.chat.ChatListener;
-import com.lunachat_like.lunachat_like.chat.ChatSender;
 import com.lunachat_like.lunachat_like.chat.DictionaryManager;
+import com.lunachat_like.lunachat_like.config.LunachatLikeConfig;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommand;
@@ -44,21 +43,25 @@ public class LunachatLikeCommand extends CommandBase {
 
         switch (sub.toLowerCase()) {
             case "togglereceive":
-                if(ChatListener.enable){
-                    ChatListener.enable = false;
+                if(LunachatLikeConfig.enableReceive){
+                	LunachatLikeConfig.enableReceive = false;
+                	LunachatLikeConfig.saveConfig();
                     sender.addChatMessage(new ChatComponentText("§a[lunachat_like]§7受信チャットのローマ字変換を無効にしました"));
                 }else {
-                    ChatListener.enable = true;
+                	LunachatLikeConfig.enableReceive = true;
+                	LunachatLikeConfig.saveConfig();
                     sender.addChatMessage(new ChatComponentText("§a[lunachat_like]§7受信チャットのローマ字変換を有効にしました"));
                 }
                 break;
 
             case "togglesend":
-                if(ChatSender.enable){
-                    ChatSender.enable = false;
+                if(LunachatLikeConfig.enableSend){
+                	LunachatLikeConfig.enableSend = false;
+                	LunachatLikeConfig.saveConfig();
                     sender.addChatMessage(new ChatComponentText("§a[lunachat_like]§7送信チャットのローマ字変換を無効にしました"));
                 }else {
-                    ChatSender.enable = true;
+                	LunachatLikeConfig.enableSend = true;
+                	LunachatLikeConfig.saveConfig();
                     sender.addChatMessage(new ChatComponentText("§a[lunachat_like]§7送信チャットのローマ字変換を有効にしました"));
                 }
                 break;

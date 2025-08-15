@@ -3,6 +3,8 @@ package com.lunachat_like.lunachat_like.chat;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.lunachat_like.lunachat_like.config.LunachatLikeConfig;
+
 import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -169,7 +171,7 @@ public class ChatListener {
     private static String messagePart = "";
     @SubscribeEvent
     public void ChatReceived(ClientChatReceivedEvent event) {
-    	if(!enable)return;
+    	if(!LunachatLikeConfig.enableReceive)return;
     	message = event.message.getUnformattedText(); // 色コードや装飾を除去したテキスト
     	
     	String colormessage = event.message.getFormattedText();//デバッグ用パート
