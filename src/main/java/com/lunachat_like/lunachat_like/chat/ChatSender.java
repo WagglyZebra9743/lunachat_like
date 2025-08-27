@@ -43,12 +43,11 @@ public class ChatSender {
 
                 	
                 	if(ChatListener.containsJapanese(currentMessage))return;
-                	if(currentMessage.startsWith("gg")||currentMessage.startsWith("gf")||currentMessage.startsWith("nc"))return;
                 	
                     // ローマ字変換処理
                 	String jpmessage = ChatListener.toHiragana(currentMessage);//ローマ字→ひらがな
                 	String kanjimessage = DictionaryManager.convertToKanji(jpmessage);// ひらがな→単語変換
-                    if(kanjimessage==null||kanjimessage.isEmpty()||kanjimessage==""||kanjimessage.equals(currentMessage))return;
+                    if(kanjimessage==null||kanjimessage.isEmpty()||kanjimessage==""||kanjimessage.equals(currentMessage.toLowerCase()))return;
                 	String convertedMessage = currentMessage +" (" + kanjimessage+")"; 
                 	
 

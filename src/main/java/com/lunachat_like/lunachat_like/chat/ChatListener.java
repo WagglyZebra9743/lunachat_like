@@ -200,15 +200,13 @@ public class ChatListener {
         	System.out.println("not need text change");
         	return;
         }
-        //単語系除外
-		if(messagePart.startsWith("gg")||messagePart.startsWith("gf")||messagePart.startsWith("nc"))return;
 		
 		//ローマ字→ひらがな→漢字変換
     	jpmessage = toHiragana(messagePart);
     	kanjimessage = DictionaryManager.convertToKanji(jpmessage);
     	
-    	//漢字変換したものと元メッセージが同じなら終わり
-    	if(kanjimessage==null||kanjimessage.isEmpty()||kanjimessage==""||kanjimessage.equals(messagePart))return;
+    	//漢字変換したものと元メッセージを小文字化したものが同じなら終わり
+    	if(kanjimessage==null||kanjimessage.isEmpty()||kanjimessage==""||kanjimessage.equals(messagePart.toLowerCase()))return;
     	
     	//チャットの後ろに付け加える
     	event.message.appendSibling(new ChatComponentText(" §6(" + kanjimessage + ")"));
