@@ -185,10 +185,7 @@ public class DictionaryManager {
             
             
             //不具合修正1.1
-            out.println("# 不具合修正用パッチ(1.1)");
-            out.println("gg=");
-            out.println("gf=");
-            out.println("()=");
+            out.println("# 不具合修正用パッチ(1.1)は不具合を増やすので消しました");
             
             //不具合修正1.2
             out.println("# 不具合修正用パッチ(1.2)");
@@ -231,4 +228,36 @@ public class DictionaryManager {
         }
         return result;
     }
+    
+    // 不要なエントリを削除するメソッドを追加
+    public static void removeEntryFromDictionary(String key) {
+        if (dictFile == null || !dictFile.exists()) return;
+
+        try {
+            // ファイル内容をすべて読み込む
+            List<String> lines;
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dictFile), "UTF-8"))) {
+                lines = br.lines().collect(Collectors.toList());
+            }
+
+            // 指定キーを含む行を削除
+            List<String> newLines = lines.stream()
+                    .filter(line -> !(line.contains("=") && line.split("=")[0].trim().equals(key)))
+                    .collect(Collectors.toList());
+
+            // ファイルに書き戻し
+            try (PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(dictFile), "UTF-8"))) {
+                for (String l : newLines) {
+                    out.println(l);
+                }
+            }
+
+            // 再読み込み
+            readDictionary(dictFile);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

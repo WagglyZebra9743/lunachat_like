@@ -93,10 +93,6 @@ public class ChatListener {
       //一部特殊単語
         ROMAJI_MAP.put("dia", "ダイヤ"); 
 
-		//一部特殊単語
-		ROMAJI_MAP.put("gg","");
-		ROMAJI_MAP.put("gf","");
-
         //2文字(小さくなるやつ)
         ROMAJI_MAP.put("xa","ぁ"); ROMAJI_MAP.put("xi","ぃ"); ROMAJI_MAP.put("xu","ぅ"); ROMAJI_MAP.put("xe","ぇ"); ROMAJI_MAP.put("xo","ぉ");
         ROMAJI_MAP.put("la","ぁ"); ROMAJI_MAP.put("li","ぃ"); ROMAJI_MAP.put("lu","ぅ"); ROMAJI_MAP.put("le","ぇ"); ROMAJI_MAP.put("lo","ぉ");
@@ -174,14 +170,12 @@ public class ChatListener {
     	if(!LunachatLikeConfig.enableReceive)return;
     	message = event.message.getUnformattedText(); // 色コードや装飾を除去したテキスト
     	
-    	String colormessage = event.message.getFormattedText();//デバッグ用パート
-    	System.out.println("colortext:"+colormessage);
+    	String colormessage = event.message.getFormattedText();
     	
     	//現状見つけたエラーメッセージを除外しようとしている
     	if((colormessage.startsWith("§r§b")&&!colormessage.startsWith("§r§b[ClanChat]"))||colormessage.startsWith("§c"))return;
     	//通常チャット パーティーチャット 個人チャット クランチャット以外なら終わり
     	if(!colormessage.contains("§r§f : ")&&!colormessage.contains("§r§f: ")&&!colormessage.contains("た: ")&&!colormessage.contains("§r§b[ClanChat]")) {
-    		System.out.println("not chat msg");
     		return;
     	}
 		
@@ -197,7 +191,6 @@ public class ChatListener {
         
         //null,なし,日本語あり,色コードあり(rをのぞく)
         if(messagePart==null||messagePart.isEmpty()||containsJapanese(messagePart)||(containsColorCode(messagePart)&&!colormessage.endsWith("§r"))) {
-        	System.out.println("not need text change");
         	return;
         }
 		

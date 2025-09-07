@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = "lunachat_like", version = "1.2",guiFactory = "com.lunachat_like.lunachat_like.config.GuiFactory")
+@Mod(modid = "lunachat_like", version = "1.4",guiFactory = "com.lunachat_like.lunachat_like.config.GuiFactory")
 public class lunachat_like {
 	public static boolean enable = true;
 
@@ -22,9 +22,9 @@ public class lunachat_like {
         MinecraftForge.EVENT_BUS.register(new ChatListener());
         MinecraftForge.EVENT_BUS.register(new ChatSender());
         DictionaryManager.loadDictionary();
-        
-        
-
+        DictionaryManager.removeEntryFromDictionary("gg");
+        DictionaryManager.removeEntryFromDictionary("gf");
+        DictionaryManager.removeEntryFromDictionary("()");
     }
     
     @Mod.EventHandler
