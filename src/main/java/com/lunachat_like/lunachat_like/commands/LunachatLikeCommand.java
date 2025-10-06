@@ -35,7 +35,7 @@ public class LunachatLikeCommand extends CommandBase {
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
         if (args.length == 0) {
-            sender.addChatMessage(new ChatComponentText("§c使用方法: /jp <togglereceive/togglesend/reload/help>"));
+            sendmsg("§c使用方法: /jp <togglereceive/togglesend/reload/help>",sender);
             return;
         }
 
@@ -46,11 +46,11 @@ public class LunachatLikeCommand extends CommandBase {
                 if(LunachatLikeConfig.enableReceive){
                 	LunachatLikeConfig.enableReceive = false;
                 	LunachatLikeConfig.saveConfig();
-                    sender.addChatMessage(new ChatComponentText("§a[lunachat_like]§7受信チャットのローマ字変換を無効にしました"));
+                    sendmsg("§f[§aLCL§f]受信チャットのローマ字変換を無効にしました",sender);
                 }else {
                 	LunachatLikeConfig.enableReceive = true;
                 	LunachatLikeConfig.saveConfig();
-                    sender.addChatMessage(new ChatComponentText("§a[lunachat_like]§7受信チャットのローマ字変換を有効にしました"));
+                    sendmsg("§f[§aLCL§f]受信チャットのローマ字変換を有効にしました",sender);
                 }
                 break;
 
@@ -58,30 +58,30 @@ public class LunachatLikeCommand extends CommandBase {
                 if(LunachatLikeConfig.enableSend){
                 	LunachatLikeConfig.enableSend = false;
                 	LunachatLikeConfig.saveConfig();
-                    sender.addChatMessage(new ChatComponentText("§a[lunachat_like]§7送信チャットのローマ字変換を無効にしました"));
+                    sendmsg("§f[§aLCL§f]送信チャットのローマ字変換を無効にしました",sender);
                 }else {
                 	LunachatLikeConfig.enableSend = true;
                 	LunachatLikeConfig.saveConfig();
-                    sender.addChatMessage(new ChatComponentText("§a[lunachat_like]§7送信チャットのローマ字変換を有効にしました"));
+                    sendmsg("§f[§aLCL§f]送信チャットのローマ字変換を有効にしました",sender);
                 }
                 break;
             case "reload":
-            	sender.addChatMessage(new ChatComponentText("§a[lunachat_like]§7変換辞書の再度読み込みを実行します"));
+            	sendmsg("§f[§aLCL§f]変換辞書の再度読み込みを実行します",sender);
             	DictionaryManager.reloadDictionary();
             	break;
             	
 
             case "help":
             	
-                sender.addChatMessage(new ChatComponentText("§a---- [lunachat_like] コマンド一覧 ----"));
-                sender.addChatMessage(new ChatComponentText("§7/jp togglereceive - 受信チャット（橙色）のローマ字変換を切り替えます"));
-                sender.addChatMessage(new ChatComponentText("§7/jp togglesend - 送信チャット（自分）のローマ字変換を切り替えます"));
-                sender.addChatMessage(new ChatComponentText("§7/jp reload - 変換辞書(config/lunachat_dict.txt)を再度読み込みします"));
-                sender.addChatMessage(new ChatComponentText("§7/jp help - この一覧を表示します"));
+                sendmsg("§6---- [lunachat_like] コマンド一覧 ----",sender);
+                sendmsg("§6/jp togglereceive§7 - 受信チャット（橙色）のローマ字変換を切り替えます",sender);
+                sendmsg("§6/jp togglesend§7 - 送信チャット（自分）のローマ字変換を切り替えます",sender);
+                sendmsg("§6/jp reload§7 - 変換辞書(config/lunachat_dict.txt)を再度読み込みします",sender);
+                sendmsg("§6/jp help§7 - この一覧を表示します",sender);
                 break;
            
             default:
-                sender.addChatMessage(new ChatComponentText("§c不明なコマンドです。/jp help でヘルプを表示します。"));
+                sendmsg("§c不明なコマンドです。/jp help でヘルプを表示します。",sender);
                 break;
         }
     }
@@ -117,5 +117,8 @@ public class LunachatLikeCommand extends CommandBase {
             return getListOfStringsMatchingLastWord(args, options.toArray(new String[0]));
         }
         return null;
+    }
+    private static void sendmsg(String msg , ICommandSender sender) {
+    	sender.addChatMessage(new ChatComponentText(msg));
     }
 }

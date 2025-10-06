@@ -3,6 +3,8 @@ package com.lunachat_like.lunachat_like;
 import com.lunachat_like.lunachat_like.chat.ChatListener;
 import com.lunachat_like.lunachat_like.chat.ChatSender;
 import com.lunachat_like.lunachat_like.chat.DictionaryManager;
+import com.lunachat_like.lunachat_like.chat.LunachatLikeHUD;
+import com.lunachat_like.lunachat_like.commands.LunachatLikeChannels;
 import com.lunachat_like.lunachat_like.commands.LunachatLikeCommand;
 import com.lunachat_like.lunachat_like.config.LunachatLikeConfig;
 
@@ -12,19 +14,21 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = "lunachat_like", version = "1.4",guiFactory = "com.lunachat_like.lunachat_like.config.GuiFactory")
+@Mod(modid = "lunachat_like", version = "1.5",guiFactory = "com.lunachat_like.lunachat_like.config.GuiFactory")
 public class lunachat_like {
 	public static boolean enable = true;
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         ClientCommandHandler.instance.registerCommand(new LunachatLikeCommand());
+        ClientCommandHandler.instance.registerCommand(new LunachatLikeChannels());
         MinecraftForge.EVENT_BUS.register(new ChatListener());
         MinecraftForge.EVENT_BUS.register(new ChatSender());
         DictionaryManager.loadDictionary();
         DictionaryManager.removeEntryFromDictionary("gg");
         DictionaryManager.removeEntryFromDictionary("gf");
         DictionaryManager.removeEntryFromDictionary("()");
+        MinecraftForge.EVENT_BUS.register(new LunachatLikeHUD());
     }
     
     @Mod.EventHandler

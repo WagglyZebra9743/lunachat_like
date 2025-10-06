@@ -2,14 +2,19 @@ package com.lunachat_like.lunachat_like.chat;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.lunachat_like.lunachat_like.config.LunachatLikeConfig;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ChatListener {
+	Minecraft mc = Minecraft.getMinecraft();
 	private static final Map<String, String> ROMAJI_MAP = new LinkedHashMap<>();
 
     static {
@@ -66,11 +71,11 @@ public class ChatListener {
         ROMAJI_MAP.put("jje", "っじぇ");
         ROMAJI_MAP.put("tta", "った"); ROMAJI_MAP.put("tti", "っち"); ROMAJI_MAP.put("ttu", "っつ"); ROMAJI_MAP.put("tte", "って"); ROMAJI_MAP.put("tto", "っと");
         ROMAJI_MAP.put("dda", "っだ"); ROMAJI_MAP.put("ddi", "っぢ"); ROMAJI_MAP.put("ddu", "っづ"); ROMAJI_MAP.put("dde", "っで"); ROMAJI_MAP.put("ddo", "っど");
-        							 ROMAJI_MAP.put("jji", "っじ");
+        							 	ROMAJI_MAP.put("jji", "っじ");
         ROMAJI_MAP.put("ppa", "っぱ"); ROMAJI_MAP.put("ppi", "っぴ"); ROMAJI_MAP.put("ppu", "っぷ"); ROMAJI_MAP.put("ppe", "っぺ"); ROMAJI_MAP.put("ppo", "っぽ");
         ROMAJI_MAP.put("bba", "っば"); ROMAJI_MAP.put("bbi", "っび"); ROMAJI_MAP.put("bbu", "っぶ"); ROMAJI_MAP.put("bbe", "っべ"); ROMAJI_MAP.put("bbo", "っぼ");
         ROMAJI_MAP.put("hha", "っは"); ROMAJI_MAP.put("hhi", "っひ"); ROMAJI_MAP.put("hhu", "っふ"); ROMAJI_MAP.put("hhe", "っへ"); ROMAJI_MAP.put("hho", "っほ");
-        														  ROMAJI_MAP.put("ffu", "っふ");
+        														  		ROMAJI_MAP.put("ffu", "っふ");
         ROMAJI_MAP.put("ffa","っふぁ");ROMAJI_MAP.put("ffi","っふぃ");ROMAJI_MAP.put("ffe","っふぇ");ROMAJI_MAP.put("ffo", "っふぉ");
         ROMAJI_MAP.put("mma", "っま"); ROMAJI_MAP.put("mmi", "っみ"); ROMAJI_MAP.put("mmu", "っむ"); ROMAJI_MAP.put("mme", "っめ"); ROMAJI_MAP.put("mmo", "っも");
         ROMAJI_MAP.put("yya", "っや"); ROMAJI_MAP.put("yyu", "っゆ"); ROMAJI_MAP.put("yyo", "っよ");
@@ -167,17 +172,56 @@ public class ChatListener {
     private static String messagePart = "";
     @SubscribeEvent
     public void ChatReceived(ClientChatReceivedEvent event) {
+    	String colormessage = event.message.getFormattedText();
+    	if(LunachatLikeConfig.auteres) {
+    		if(colormessage.startsWith("§r§a[P]")&&!LunachatLikeConfig.channel.equals("p")) {
+        		LunachatLikeConfig.channel = "p";
+        		sendchat("§f[§aLCL§f]デフォルトの発言先をパーティーチャットに変更しました",mc.thePlayer);
+        		LunachatLikeConfig.saveConfig();
+        	}
+    		if(colormessage.startsWith("§r§b[ClanChat]")&&!LunachatLikeConfig.channel.equals("clan msg")) {
+    			LunachatLikeConfig.channel = "clan msg";
+    			sendchat("§f[§aLCL§f]デフォルトの発言先をクランチャットに変更しました",mc.thePlayer);
+    			LunachatLikeConfig.saveConfig();
+    		}
+    		if(colormessage.startsWith("§r§a[GroupChat]")&&!LunachatLikeConfig.channel.equals("group")) {
+    			LunachatLikeConfig.channel = "group";
+    			sendchat("§f[§aLCL§f]デフォルトの発言先をグループ(近距離)チャットに変更しました",mc.thePlayer);
+    			LunachatLikeConfig.saveConfig();
+    		}
+    		if(colormessage.contains("からささやかれました")&&colormessage.endsWith("§r")&&colormessage.startsWith("§r§o§7")) {
+    			String regex = "§r§o§7(.*?)からささやかれました";
+    			Pattern pattern = Pattern.compile(regex);
+    			Matcher matcher = pattern.matcher(colormessage);
+    			if (matcher.find()) {
+    	            // 一致した部分の中から、1番目のグループ（(.*?)の部分）を取得
+    	            String mcid = matcher.group(1);
+    	            if(!LunachatLikeConfig.channel.equals("tell "+mcid)) {
+    	            	LunachatLikeConfig.channel = "tell "+mcid;
+        	            sendchat("§f[§aLCL§f]デフォルトの発言先を"+mcid+"との個人チャットに変更しました",mc.thePlayer);
+        	            LunachatLikeConfig.saveConfig();
+    	            }
+    	        }else {
+    	        	System.out.println("mcid not found");
+    	        }
+    		}
+    	}
     	if(!LunachatLikeConfig.enableReceive)return;
     	message = event.message.getUnformattedText(); // 色コードや装飾を除去したテキスト
     	
-    	String colormessage = event.message.getFormattedText();
     	
     	//現状見つけたエラーメッセージを除外しようとしている
     	if((colormessage.startsWith("§r§b")&&!colormessage.startsWith("§r§b[ClanChat]"))||colormessage.startsWith("§c"))return;
     	//通常チャット パーティーチャット 個人チャット クランチャット以外なら終わり
-    	if(!colormessage.contains("§r§f : ")&&!colormessage.contains("§r§f: ")&&!colormessage.contains("た: ")&&!colormessage.contains("§r§b[ClanChat]")) {
+    	if(!colormessage.contains("§r§f : ")&&!colormessage.contains("§r§f: ")&&!colormessage.contains("§r§o§7")&&!colormessage.contains("§r§7")&&!colormessage.contains("た: ")&&!colormessage.contains("§r§b[ClanChat]")&&!colormessage.startsWith("§a[GroupChat]")) {
     		return;
     	}
+    	
+    	//§r§r§r§fRumiLuna§r§r§6 [くすりや] §r§f: §rはじめて+10いった§r//§r§r§r§6[Donor] §r§fWagglyZebra9743§r§r§e [WYC] §r§f: §rkorede panntori- to owakareda (これで ぱんとりー と おわかれだ)§r
+    	//§r§a[P] §r§fWagglyZebra9743§r§f: test(てst)§r
+    	//§r§o§7potato_salad5152からささやかれました： a§r//§r§7potato_salad5152にささやきました： a§r
+    	//§r§b[ClanChat] §r§r§r§6[Donor] §r§fWagglyZebra9743§r§r§e [WYC] §r§f: §rtest§r §6(てst)§r
+    	//§r§a[GroupChat]§r§f §r§r§r§6[Donor] §r§fWagglyZebra9743§r§r§e [WYC] §r§f: §ra(あ)§r
 		
     	//変数初期化
     	String kanjimessage = "";
@@ -189,7 +233,7 @@ public class ChatListener {
             messagePart = message.substring(colonIndex + 2);
         }else return;//: がないなら終わり
         
-        //null,なし,日本語あり,色コードあり(rをのぞく)
+        //null,空,日本語あり,色コードあり(rをのぞく)なら終わり
         if(messagePart==null||messagePart.isEmpty()||containsJapanese(messagePart)||(containsColorCode(messagePart)&&!colormessage.endsWith("§r"))) {
         	return;
         }
@@ -199,12 +243,14 @@ public class ChatListener {
     	kanjimessage = DictionaryManager.convertToKanji(jpmessage);
     	
     	//漢字変換したものと元メッセージを小文字化したものが同じなら終わり
-    	if(kanjimessage==null||kanjimessage.isEmpty()||kanjimessage==""||kanjimessage.equals(messagePart.toLowerCase()))return;
+    	if(kanjimessage==null||kanjimessage.isEmpty()||kanjimessage.equals("")||kanjimessage.equals(messagePart.toLowerCase()))return;
     	
     	//チャットの後ろに付け加える
     	event.message.appendSibling(new ChatComponentText(" §6(" + kanjimessage + ")"));
 
         }
-    
-
+    private static void sendchat(String text,EntityPlayerSP thePlayer) {
+    	Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(text));
+    	return;
+    }
 }
