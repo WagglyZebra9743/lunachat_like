@@ -216,12 +216,6 @@ public class ChatListener {
     	if(!colormessage.contains("§r§f : ")&&!colormessage.contains("§r§f: ")&&!colormessage.contains("§r§o§7")&&!colormessage.contains("§r§7")&&!colormessage.contains("た: ")&&!colormessage.contains("§r§b[ClanChat]")&&!colormessage.startsWith("§a[GroupChat]")) {
     		return;
     	}
-    	
-    	//§r§r§r§fRumiLuna§r§r§6 [くすりや] §r§f: §rはじめて+10いった§r//§r§r§r§6[Donor] §r§fWagglyZebra9743§r§r§e [WYC] §r§f: §rkorede panntori- to owakareda (これで ぱんとりー と おわかれだ)§r
-    	//§r§a[P] §r§fWagglyZebra9743§r§f: test(てst)§r
-    	//§r§o§7potato_salad5152からささやかれました： a§r//§r§7potato_salad5152にささやきました： a§r
-    	//§r§b[ClanChat] §r§r§r§6[Donor] §r§fWagglyZebra9743§r§r§e [WYC] §r§f: §rtest§r §6(てst)§r
-    	//§r§a[GroupChat]§r§f §r§r§r§6[Donor] §r§fWagglyZebra9743§r§r§e [WYC] §r§f: §ra(あ)§r
 		
     	//変数初期化
     	String kanjimessage = "";

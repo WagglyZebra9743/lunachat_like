@@ -42,13 +42,13 @@ public class LunachatLikeConfig {
     }
 
     public static void saveConfig() {
-        config.get(Configuration.CATEGORY_GENERAL, "enableReceive", enableReceive,"受信チャットをローマ字変換するか").set(enableReceive);
-        config.get(Configuration.CATEGORY_GENERAL, "enableSend", enableSend,"送信チャットをローマ字変換するか").set(enableSend);
-        config.get(Configuration.CATEGORY_GENERAL, "autesend", autesend,"送信時の自動チェンネル切り替え").set(autesend);
-        config.get(Configuration.CATEGORY_GENERAL, "auteres", auteres,"受信の自動チェンネル切り替え").set(auteres);
-        config.get(Configuration.CATEGORY_GENERAL, "channel", channel,"デフォルトの発言先").set(channel);
-        config.get(Configuration.CATEGORY_GENERAL, "hudX", hudX, "発言先表示のX座標").set(hudX);
-        config.get(Configuration.CATEGORY_GENERAL, "hudY", hudY, "発言先表示のY座標").set(hudY);
+        config.get(Configuration.CATEGORY_GENERAL, "enableReceive", true,"受信チャットをローマ字変換するか").set(enableReceive);
+        config.get(Configuration.CATEGORY_GENERAL, "enableSend", true,"送信チャットをローマ字変換するか").set(enableSend);
+        config.get(Configuration.CATEGORY_GENERAL, "autesend", false,"送信時の自動チェンネル切り替え").set(autesend);
+        config.get(Configuration.CATEGORY_GENERAL, "auteres", false,"受信の自動チェンネル切り替え").set(auteres);
+        config.get(Configuration.CATEGORY_GENERAL, "channel", "all","デフォルトの発言先").set(channel);
+        config.get(Configuration.CATEGORY_GENERAL, "hudX", 5, "発言先表示のX座標").set(hudX);
+        config.get(Configuration.CATEGORY_GENERAL, "hudY", 5, "発言先表示のY座標").set(hudY);
         if (config.hasChanged()) {
             config.save();
         }
@@ -56,16 +56,16 @@ public class LunachatLikeConfig {
     public static void syncConfig() {
         config.setCategoryComment(Configuration.CATEGORY_GENERAL, "Lunachat Like の設定");
 
-        enableReceive = config.getBoolean("enableReceive",Configuration.CATEGORY_GENERAL,enableReceive,"受信チャットを変換する機能を切り替える");
+        enableReceive = config.getBoolean("enableReceive",Configuration.CATEGORY_GENERAL,true,"受信チャットを変換する機能を切り替える");
 
-        enableSend = config.getBoolean("enableSend",Configuration.CATEGORY_GENERAL,enableSend,"送信チャットを変換する機能を切り替える");
+        enableSend = config.getBoolean("enableSend",Configuration.CATEGORY_GENERAL,true,"送信チャットを変換する機能を切り替える");
         
-        autesend = config.getBoolean("autesend",Configuration.CATEGORY_GENERAL,autesend,"チャット送信時に自動でチャンネルを切り替える");
-        auteres = config.getBoolean("auteres",Configuration.CATEGORY_GENERAL,auteres,"受信時に自動でチャンネルを切り替える(全体を除く)");
-        channel = config.getString("channel",Configuration.CATEGORY_GENERAL,channel,"チャットを送信するチャンネル");
+        autesend = config.getBoolean("autesend",Configuration.CATEGORY_GENERAL,false,"チャット送信時に自動でチャンネルを切り替える");
+        auteres = config.getBoolean("auteres",Configuration.CATEGORY_GENERAL,false,"受信時に自動でチャンネルを切り替える(全体を除く)");
+        channel = config.getString("channel",Configuration.CATEGORY_GENERAL,"all","チャットを送信するチャンネル");
         
-        hudX = config.getInt(Configuration.CATEGORY_GENERAL, "hudX", hudX, Integer.MIN_VALUE, Integer.MAX_VALUE, "発言先表示のX座標");
-        hudY = config.getInt(Configuration.CATEGORY_GENERAL, "hudY", hudY, Integer.MIN_VALUE, Integer.MAX_VALUE, "発言先表示のY座標");
+        hudX = config.getInt(Configuration.CATEGORY_GENERAL, "hudX", 5, Integer.MIN_VALUE, Integer.MAX_VALUE, "発言先表示のX座標");
+        hudY = config.getInt(Configuration.CATEGORY_GENERAL, "hudY", 5, Integer.MIN_VALUE, Integer.MAX_VALUE, "発言先表示のY座標");
 
         if (config.hasChanged()) {
             config.save();
