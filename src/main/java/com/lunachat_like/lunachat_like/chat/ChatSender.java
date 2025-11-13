@@ -31,10 +31,14 @@ public class ChatSender {
         }
     }
 
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onGuiDraw(GuiScreenEvent.DrawScreenEvent event) {
+    	LunachatLikeHUD.enable = false;
+    	if(event.gui instanceof GuiChat )LunachatLikeHUD.enable = true;
+    }
     // 他のMODより先に実行されるように、優先度をHIGHに設定
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onKeyInput(GuiScreenEvent.KeyboardInputEvent.Pre event) {
-    	LunachatLikeHUD.enable = false;
         if(event.gui instanceof GuiChat ) {
         	LunachatLikeHUD.enable = true;
         }else LunachatLikeHUD.enable = false;
