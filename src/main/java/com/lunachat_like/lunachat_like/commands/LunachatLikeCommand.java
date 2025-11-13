@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.lunachat_like.lunachat_like.chat.ChatListener;
 import com.lunachat_like.lunachat_like.chat.DictionaryManager;
 import com.lunachat_like.lunachat_like.config.LunachatLikeConfig;
 
@@ -80,6 +81,10 @@ public class LunachatLikeCommand extends CommandBase {
                 sendmsg("§6/jp help§7 - この一覧を表示します",sender);
                 break;
            
+            case "debug":
+            	ChatListener.debugmode=!ChatListener.debugmode;
+            	sendmsg("§f§aLCL§f]debugmode change to "+ChatListener.debugmode,sender);
+            	break;
             default:
                 sendmsg("§c不明なコマンドです。/jp help でヘルプを表示します。",sender);
                 break;

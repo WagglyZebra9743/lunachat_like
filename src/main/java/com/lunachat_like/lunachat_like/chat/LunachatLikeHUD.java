@@ -11,18 +11,17 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class LunachatLikeHUD {
 	private static final Minecraft mc = Minecraft.getMinecraft();
+	private static final FontRenderer font = mc.fontRendererObj;
 	public static boolean enable = false ;
 	@SubscribeEvent
     public void onRenderGameOverlay(RenderGameOverlayEvent.Text event) {
-		if(!enable) {
-			return;
-		}
-		FontRenderer font = mc.fontRendererObj;
-    	int x = LunachatLikeConfig.hudX;//HUD表示位置指定
-    	int y = LunachatLikeConfig.hudY;//HUD表示位置指定
-    	int textWidth = font.getStringWidth("/"+LunachatLikeConfig.channel);
-    	int textHeight = font.FONT_HEIGHT;
-    	int padding = 2;
+		if(!enable)return;
+		enable = false;
+    	final int x = LunachatLikeConfig.hudX;//HUD表示位置指定
+    	final int y = LunachatLikeConfig.hudY;//HUD表示位置指定
+    	final int textWidth = font.getStringWidth("/"+LunachatLikeConfig.channel);
+    	final int textHeight = font.FONT_HEIGHT;
+    	final int padding = 2;
     	Gui.drawRect(x - padding, y - padding, x + textWidth + padding, y + textHeight + padding, 0x50000000);
     	
     	

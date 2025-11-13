@@ -14,7 +14,8 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ChatListener {
-	Minecraft mc = Minecraft.getMinecraft();
+	private static final Minecraft mc = Minecraft.getMinecraft();
+	public static boolean debugmode = false;
 	private static final Map<String, String> ROMAJI_MAP = new LinkedHashMap<>();
 
     static {
@@ -208,7 +209,7 @@ public class ChatListener {
     	}
     	if(!LunachatLikeConfig.enableReceive)return;
     	message = event.message.getUnformattedText(); // 色コードや装飾を除去したテキスト
-    	
+    	if(debugmode)System.out.println("[LCL]チャットを取得:"+event.message.getFormattedText());
     	
     	//現状見つけたエラーメッセージを除外しようとしている
     	if((colormessage.startsWith("§r§b")&&!colormessage.startsWith("§r§b[ClanChat]"))||colormessage.startsWith("§c"))return;
