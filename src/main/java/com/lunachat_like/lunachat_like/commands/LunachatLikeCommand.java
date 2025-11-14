@@ -85,6 +85,11 @@ public class LunachatLikeCommand extends CommandBase {
             	ChatListener.debugmode=!ChatListener.debugmode;
             	sendmsg("§f[§aLCL§f]debugmode change to "+ChatListener.debugmode,sender);
             	break;
+            	
+            case "stack":
+            	ChatListener.stackmode=!ChatListener.stackmode;
+            	sendmsg("§f[§aLCL§f]stackmode change to "+ChatListener.stackmode,sender);
+            	break;
             default:
                 sendmsg("§f[§aLCL§f]§c不明なコマンドです。/jp help でヘルプを表示します。",sender);
                 break;

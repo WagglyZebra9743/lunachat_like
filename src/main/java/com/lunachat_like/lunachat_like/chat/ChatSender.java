@@ -20,7 +20,7 @@ public class ChatSender {
 
     public static boolean enable = true;
 
-    Minecraft mc = Minecraft.getMinecraft();
+    private static final Minecraft mc = Minecraft.getMinecraft();
     private static Field inputField;
     static {
         try {
@@ -115,11 +115,11 @@ public class ChatSender {
                 			}
                 		}
                 		
-                		String[] parts = currentMessage.split(" ", 3);
+                		final String[] parts = currentMessage.split(" ", 3);
                 		if(parts.length==0) {
                 			return;
                 		}else {
-                			String commandpart = parts[0].replace("/", "");
+                			final String commandpart = parts[0].replace("/", "");
                 			String chchangeto = "";
                 			switch(commandpart){
                 				case "all":

@@ -42,7 +42,7 @@ public class LunachatLikeChannels extends CommandBase {
             return;
         }
 
-        String sub = args[0];
+        final String sub = args[0];
 
         switch (sub.toLowerCase()) {
             case "autosend":
@@ -112,7 +112,7 @@ public class LunachatLikeChannels extends CommandBase {
             	break;
             case "tell":
             	if(args.length>=2) {
-            		String mcid = args[1];
+            		final String mcid = args[1];
             		sendmsg("§f[§aLCL§f]デフォルトの発言先を"+mcid+"との個人チャットに変更しました",sender);
                 	LunachatLikeConfig.channel = "tell "+mcid;
                 	LunachatLikeConfig.saveConfig();

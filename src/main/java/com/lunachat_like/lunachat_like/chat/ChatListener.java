@@ -9,13 +9,22 @@ import com.lunachat_like.lunachat_like.config.LunachatLikeConfig;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class ChatListener {
 	private static final Minecraft mc = Minecraft.getMinecraft();
 	public static boolean debugmode = false;
+	public static boolean stackmode = false;
+	private static String chatlog[] = new String[10];
+	private static String doublechat = "";
+	private static int timer = 0;
+	private static boolean showHUD = false;
 	private static final Map<String, String> ROMAJI_MAP = new LinkedHashMap<>();
 
     static {
@@ -148,8 +157,8 @@ public class ChatListener {
         
     }
 
-    public static String toHiragana(String input) {
-        String lower = input.toLowerCase();
+    public static String toHiragana(final String input) {
+        final String lower = input.toLowerCase();
         String result = lower;
 
         for (Map.Entry<String, String> entry : ROMAJI_MAP.entrySet()) {
@@ -160,12 +169,12 @@ public class ChatListener {
     }
 	public static boolean enable = true;
  // 日本語判定（ひらがな、カタカナ、漢字が含まれているか）
-    public static boolean containsJapanese(String text) {
+    public static boolean containsJapanese(final String text) {
         return text.matches(".*[\\u3040-\\u30FF\\u4E00-\\u9FFF\\uFF65-\\uFF9F].*");
     }
 
     // カラーコード判定（Minecraftカラーコード§が含まれるか）
-    private boolean containsColorCode(String text) {
+    private boolean containsColorCode(final String text) {
         return text.contains("§");
     }
     
@@ -173,7 +182,8 @@ public class ChatListener {
     private static String messagePart = "";
     @SubscribeEvent
     public void ChatReceived(ClientChatReceivedEvent event) {
-    	String colormessage = event.message.getFormattedText();
+    	if (event.message == null) return;
+    	final String colormessage = event.message.getFormattedText();
     	if(LunachatLikeConfig.auteres) {
     		if(colormessage.startsWith("§r§a[P]")&&!LunachatLikeConfig.channel.equals("p")) {
         		LunachatLikeConfig.channel = "p";
@@ -191,12 +201,12 @@ public class ChatListener {
     			LunachatLikeConfig.saveConfig();
     		}
     		if(colormessage.contains("からささやかれました")&&colormessage.endsWith("§r")&&colormessage.startsWith("§r§o§7")) {
-    			String regex = "§r§o§7(.*?)からささやかれました";
-    			Pattern pattern = Pattern.compile(regex);
-    			Matcher matcher = pattern.matcher(colormessage);
+    			final String regex = "§r§o§7(.*?)からささやかれました";
+    			final Pattern pattern = Pattern.compile(regex);
+    			final Matcher matcher = pattern.matcher(colormessage);
     			if (matcher.find()) {
     	            // 一致した部分の中から、1番目のグループ（(.*?)の部分）を取得
-    	            String mcid = matcher.group(1);
+    	            final String mcid = matcher.group(1);
     	            if(!LunachatLikeConfig.channel.equals("tell "+mcid)) {
     	            	LunachatLikeConfig.channel = "tell "+mcid;
         	            sendchat("§f[§aLCL§f]デフォルトの発言先を"+mcid+"との個人チャットに変更しました",mc.thePlayer);
@@ -245,7 +255,52 @@ public class ChatListener {
 
         }
     private static void sendchat(String text,EntityPlayerSP thePlayer) {
+    	if(thePlayer==null)return;
     	Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(text));
     	return;
+    }
+    @SubscribeEvent
+    public void ChatStack(ClientChatReceivedEvent event) {
+    	
+    	if(!stackmode||event.message==null)return;
+    	final String colormessage = event.message.getUnformattedText();
+    	for(final String log : chatlog) {
+    		if(colormessage.equals(log)) {
+    			event.setCanceled(true);
+    			doublechat = colormessage;
+    			timer = 100;
+    		}
+    	}
+    	for(int i=9;0<i;i--) {
+    		chatlog[i] = chatlog[i-1];
+    	}
+    	chatlog[0] = colormessage;
+    }
+    @SubscribeEvent
+    public void ontick(TickEvent.ClientTickEvent event) {
+    	if (event.phase == TickEvent.Phase.START) return;
+    	if(timer<=0) {
+    		showHUD = false;
+    		timer = 0;
+    		return;
+    	}
+    	showHUD = true;
+    	timer--;
+    }
+    @SubscribeEvent
+    public void HUDRender(RenderGameOverlayEvent.Text event) {
+    	if(!showHUD||mc.fontRendererObj==null)return;
+    	final int x = 10;
+    	final int y = 100;
+    	final String text = "キャンセルしました"+doublechat;
+    	final int textWidth = mc.fontRendererObj.getStringWidth(text);
+    	final int textHeight = mc.fontRendererObj.FONT_HEIGHT;
+    	final int padding = 2;
+    	Gui.drawRect(x - padding, y - padding, x + textWidth + padding, y + textHeight + padding, 0x50000000);
+    	
+    	
+    	GlStateManager.pushMatrix();
+    	mc.fontRendererObj.drawStringWithShadow(text , x, y, 0xFFFFFF);
+    	GlStateManager.popMatrix();
     }
 }

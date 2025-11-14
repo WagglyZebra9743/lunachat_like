@@ -207,7 +207,7 @@ public class DictionaryManager {
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.startsWith("#") || !line.contains("=")) continue;
-                String[] parts = line.split("=", 2);
+                final String[] parts = line.split("=", 2);
                 if (parts.length == 2) {
                     tempMap.put(parts[0].trim(), parts[1].trim());
                 }
@@ -221,7 +221,7 @@ public class DictionaryManager {
             .collect(Collectors.toList());
     }
 
-    public static String convertToKanji(String hiragana) {
+    public static String convertToKanji(final String hiragana) {
         String result = hiragana;
         for (Map.Entry<String, String> entry : KANJI_ENTRIES) {
             result = result.replace(entry.getKey(), entry.getValue());
@@ -230,7 +230,7 @@ public class DictionaryManager {
     }
     
     // 不要なエントリを削除するメソッドを追加
-    public static void removeEntryFromDictionary(String key) {
+    public static void removeEntryFromDictionary(final String key) {
         if (dictFile == null || !dictFile.exists()) return;
 
         try {
