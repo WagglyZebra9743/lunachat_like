@@ -32,17 +32,17 @@ public class LunachatLikeChannels extends CommandBase {
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "/ch <autosend/autores/all/clan/party/tell/group/help>";
+        return "/ch <autosend/autores/hud/all/clan/party/tell/group/help>";
     }
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
         if (args.length == 0) {
-            sendmsg("§c使用方法: /ch <autorend/autores/all/clan/party/tell/group/help>",sender);
+            sendmsg("§c使用方法: /ch <autorend/autores/hud/all/clan/party/tell/group/help>",sender);
             return;
         }
 
-        String sub = args[0];
+        final String sub = args[0];
 
         switch (sub.toLowerCase()) {
             case "autosend":
@@ -112,7 +112,7 @@ public class LunachatLikeChannels extends CommandBase {
             	break;
             case "tell":
             	if(args.length>=2) {
-            		String mcid = args[1];
+            		final String mcid = args[1];
             		sendmsg("§f[§aLCL§f]デフォルトの発言先を"+mcid+"との個人チャットに変更しました",sender);
                 	LunachatLikeConfig.channel = "tell "+mcid;
                 	LunachatLikeConfig.saveConfig();
@@ -182,23 +182,22 @@ public class LunachatLikeChannels extends CommandBase {
                 
                 
                 // クライアントのネットワークハンドラを取得
-                NetHandlerPlayClient netHandler = Minecraft.getMinecraft().getNetHandler();
+                final NetHandlerPlayClient netHandler = Minecraft.getMinecraft().getNetHandler();
                 if (netHandler == null) {
                     return null; // 念のためnullチェック
                 }
 
                 // クライアントが認識しているプレイヤー情報のリストを取得
-                Collection<NetworkPlayerInfo> playerInfoMap = netHandler.getPlayerInfoMap();
+                final Collection<NetworkPlayerInfo> playerInfoMap = netHandler.getPlayerInfoMap();
                 List<String> playerNames = new ArrayList<>();
 
                 // プレイヤー情報から名前を抽出してリストに追加
-                for (NetworkPlayerInfo playerInfo : playerInfoMap) {
+                for (final NetworkPlayerInfo playerInfo : playerInfoMap) {
                     playerNames.add(playerInfo.getGameProfile().getName());
                 }
                 
                 // 作成したプレイヤー名のリストを候補として返す
                 return getListOfStringsMatchingLastWord(args, playerNames.toArray(new String[0]));
-                
             }
         }
         return null;

@@ -9,12 +9,34 @@ import com.lunachat_like.lunachat_like.config.LunachatLikeConfig;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+class chatlogs{
+	String log;
+	int ID;
+	int count;
+	chatlogs() {
+		this.log = "なし";
+		this.ID = 0;
+		this.count = 1;
+	}
+}
+
 public class ChatListener {
-	Minecraft mc = Minecraft.getMinecraft();
+	private static final Minecraft mc = Minecraft.getMinecraft();
+	public static boolean debugmode = false;
+	public static boolean stackmode = false;
+	private static chatlogs chatlog[] = new chatlogs[10];
+	static {
+	    for (int i = 0; i < chatlog.length; i++) {
+	        chatlog[i] = new chatlogs();
+	    }
+	}
+	private static int magicID = 0;
 	private static final Map<String, String> ROMAJI_MAP = new LinkedHashMap<>();
 
     static {
@@ -147,8 +169,8 @@ public class ChatListener {
         
     }
 
-    public static String toHiragana(String input) {
-        String lower = input.toLowerCase();
+    public static String toHiragana(final String input) {
+        final String lower = input.toLowerCase();
         String result = lower;
 
         for (Map.Entry<String, String> entry : ROMAJI_MAP.entrySet()) {
@@ -159,12 +181,12 @@ public class ChatListener {
     }
 	public static boolean enable = true;
  // 日本語判定（ひらがな、カタカナ、漢字が含まれているか）
-    public static boolean containsJapanese(String text) {
+    public static boolean containsJapanese(final String text) {
         return text.matches(".*[\\u3040-\\u30FF\\u4E00-\\u9FFF\\uFF65-\\uFF9F].*");
     }
 
     // カラーコード判定（Minecraftカラーコード§が含まれるか）
-    private boolean containsColorCode(String text) {
+    private boolean containsColorCode(final String text) {
         return text.contains("§");
     }
     
@@ -172,7 +194,8 @@ public class ChatListener {
     private static String messagePart = "";
     @SubscribeEvent
     public void ChatReceived(ClientChatReceivedEvent event) {
-    	String colormessage = event.message.getFormattedText();
+    	if (event.message == null) return;
+    	final String colormessage = event.message.getFormattedText();
     	if(LunachatLikeConfig.auteres) {
     		if(colormessage.startsWith("§r§a[P]")&&!LunachatLikeConfig.channel.equals("p")) {
         		LunachatLikeConfig.channel = "p";
@@ -190,12 +213,12 @@ public class ChatListener {
     			LunachatLikeConfig.saveConfig();
     		}
     		if(colormessage.contains("からささやかれました")&&colormessage.endsWith("§r")&&colormessage.startsWith("§r§o§7")) {
-    			String regex = "§r§o§7(.*?)からささやかれました";
-    			Pattern pattern = Pattern.compile(regex);
-    			Matcher matcher = pattern.matcher(colormessage);
+    			final String regex = "§r§o§7(.*?)からささやかれました";
+    			final Pattern pattern = Pattern.compile(regex);
+    			final Matcher matcher = pattern.matcher(colormessage);
     			if (matcher.find()) {
     	            // 一致した部分の中から、1番目のグループ（(.*?)の部分）を取得
-    	            String mcid = matcher.group(1);
+    	            final String mcid = matcher.group(1);
     	            if(!LunachatLikeConfig.channel.equals("tell "+mcid)) {
     	            	LunachatLikeConfig.channel = "tell "+mcid;
         	            sendchat("§f[§aLCL§f]デフォルトの発言先を"+mcid+"との個人チャットに変更しました",mc.thePlayer);
@@ -208,7 +231,7 @@ public class ChatListener {
     	}
     	if(!LunachatLikeConfig.enableReceive)return;
     	message = event.message.getUnformattedText(); // 色コードや装飾を除去したテキスト
-    	
+    	if(debugmode)System.out.println("[LCL]チャットを取得:"+event.message.getFormattedText());
     	
     	//現状見つけたエラーメッセージを除外しようとしている
     	if((colormessage.startsWith("§r§b")&&!colormessage.startsWith("§r§b[ClanChat]"))||colormessage.startsWith("§c"))return;
@@ -244,7 +267,36 @@ public class ChatListener {
 
         }
     private static void sendchat(String text,EntityPlayerSP thePlayer) {
+    	if(thePlayer==null)return;
     	Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(text));
     	return;
+    }
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void ChatStack(ClientChatReceivedEvent event) {
+    	
+    	if(!stackmode||event.message==null)return;
+    	final String colormessage = event.message.getFormattedText();
+    	final String message = event.message.getUnformattedText();
+    	if(message.equals(""))return;
+    	for(chatlogs thelog :chatlog) {
+    		if(colormessage.replaceAll("[0-9]", "").equals(thelog.log.replaceAll("[0-9]", ""))) {
+    			thelog.log = colormessage;
+    			if(thelog.ID==0) {
+    				magicID--;
+    				thelog.ID=magicID;
+    			}
+    			event.setCanceled(true);
+    			thelog.count++;
+    			final GuiNewChat chat = mc.ingameGUI.getChatGUI();
+    			chat.printChatMessageWithOptionalDeletion(new ChatComponentText(thelog.log+"("+thelog.count+")"), thelog.ID);
+    		}
+    	}
+    	if(event.isCanceled())return;
+    	chatlogs thislog = new chatlogs();
+    	thislog.log = colormessage;
+    	for(int i=9;0<i;i--) {
+    		chatlog[i] = chatlog[i-1];
+    	}
+    	chatlog[0] = thislog;
     }
 }

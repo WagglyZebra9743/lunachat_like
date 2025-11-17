@@ -20,7 +20,7 @@ public class ChatSender {
 
     public static boolean enable = true;
 
-    Minecraft mc = Minecraft.getMinecraft();
+    private static final Minecraft mc = Minecraft.getMinecraft();
     private static Field inputField;
     static {
         try {
@@ -31,10 +31,14 @@ public class ChatSender {
         }
     }
 
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onGuiDraw(GuiScreenEvent.DrawScreenEvent event) {
+    	LunachatLikeHUD.enable = false;
+    	if(event.gui instanceof GuiChat )LunachatLikeHUD.enable = true;
+    }
     // 他のMODより先に実行されるように、優先度をHIGHに設定
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onKeyInput(GuiScreenEvent.KeyboardInputEvent.Pre event) {
-    	LunachatLikeHUD.enable = false;
         if(event.gui instanceof GuiChat ) {
         	LunachatLikeHUD.enable = true;
         }else LunachatLikeHUD.enable = false;
@@ -48,7 +52,7 @@ public class ChatSender {
             	if(inputField==null)return;
                 GuiTextField textField = (GuiTextField) inputField.get(event.gui);
                 if(textField==null)return;
-                String currentMessage = textField.getText();
+                final String currentMessage = textField.getText();
 
                 // メッセージが空でなければ処理
                 if (currentMessage != null && !currentMessage.isEmpty()) {
@@ -68,7 +72,7 @@ public class ChatSender {
                     	if(LunachatLikeConfig.channel.startsWith("tell")) {
                     		cmdpart = "/"+LunachatLikeConfig.channel+" ";
                     	}
-                    	String convertedMessage = cmdpart+currentMessage;
+                    	final String convertedMessage = cmdpart+currentMessage;
                     	textField.setText(convertedMessage);
                 		return;
                 	}
@@ -90,6 +94,8 @@ public class ChatSender {
                 					sendchat("§f[§aLCL§f]デフォルトの発言先を全体チャットに変更しました",mc.thePlayer);
                     				LunachatLikeConfig.channel = "all";
                     				LunachatLikeConfig.saveConfig();
+                    				final String convertedMessage = currentMessage.replaceAll("/all ", "");
+                    				textField.setText(convertedMessage);
                     			}
                     			return;
                 			case"/p":
@@ -109,11 +115,11 @@ public class ChatSender {
                 			}
                 		}
                 		
-                		String[] parts = currentMessage.split(" ", 3);
+                		final String[] parts = currentMessage.split(" ", 3);
                 		if(parts.length==0) {
                 			return;
                 		}else {
-                			String commandpart = parts[0].replace("/", "");
+                			final String commandpart = parts[0].replace("/", "");
                 			String chchangeto = "";
                 			switch(commandpart){
                 				case "all":
@@ -137,7 +143,7 @@ public class ChatSender {
                     					if(parts.length==3) {//メッセージに空白があったらそれも考慮しよう
                     						messagepart = messagepart + " " + parts[2];
                     					}
-                    					String kanjimessage = texttoKanji(messagepart);
+                    					final String kanjimessage = texttoKanji(messagepart);
                     					if(kanjimessage==null||kanjimessage.isEmpty())return;
                     					String convertedMessage = parts[0] + " " +messagepart + " ("+kanjimessage+")";
                     					if(convertedMessage.length()>=100) {
@@ -155,8 +161,8 @@ public class ChatSender {
                     						LunachatLikeConfig.saveConfig();
                     					}
                 						if(parts.length==3) {
-                							String messagepart = parts[2];
-                    						String kanjimessage = texttoKanji(messagepart);
+                							final String messagepart = parts[2];
+                    						final String kanjimessage = texttoKanji(messagepart);
                         					if(kanjimessage==null||kanjimessage.isEmpty())return;
                         					String convertedMessage = parts[0] + " " +messagepart + " ("+kanjimessage+")";
                         					if(convertedMessage.length()>=100) {
@@ -173,8 +179,8 @@ public class ChatSender {
                     						LunachatLikeConfig.saveConfig();
                     					}
                 						if(parts.length==3) {
-                							String messagepart = parts[2];
-                    						String kanjimessage = texttoKanji(messagepart);
+                							final String messagepart = parts[2];
+                    						final String kanjimessage = texttoKanji(messagepart);
                         					if(kanjimessage==null||kanjimessage.isEmpty())return;
                         					String convertedMessage = parts[0] + " " +parts[1]+" " +messagepart + " ("+kanjimessage+")";
                         					if(convertedMessage.length()>=100) {
@@ -201,9 +207,9 @@ public class ChatSender {
                 	if(LunachatLikeConfig.channel.startsWith("tell")) {
                 		cmdpart = "/"+LunachatLikeConfig.channel+" ";
                 	}
-                	String kanjimessage = texttoKanji(currentMessage);
+                	final String kanjimessage = texttoKanji(currentMessage);
                 	if(kanjimessage==null||kanjimessage.isEmpty()) {
-                		String cmdtext = cmdpart+currentMessage;
+                		final String cmdtext = cmdpart+currentMessage;
                 		textField.setText(cmdtext);
                 		return;
                 	}
@@ -228,10 +234,10 @@ public class ChatSender {
     
     
     //ローマ字テキストをStringで入れると漢字変換されて返ってくる(無かったらnull)
-    private static String texttoKanji(String messagepart) {
+    private static String texttoKanji(final String messagepart) {
     	if(messagepart==null||messagepart.isEmpty()||ChatListener.containsJapanese(messagepart))return null;
-		String jpmessage = ChatListener.toHiragana(messagepart);
-		String kanjimessage = DictionaryManager.convertToKanji(jpmessage);
+		final String jpmessage = ChatListener.toHiragana(messagepart);
+		final String kanjimessage = DictionaryManager.convertToKanji(jpmessage);
 		if(kanjimessage==null||kanjimessage.isEmpty()||kanjimessage.equals("")||kanjimessage.equals(messagepart.toLowerCase()))return null;
 		return kanjimessage;
     }
