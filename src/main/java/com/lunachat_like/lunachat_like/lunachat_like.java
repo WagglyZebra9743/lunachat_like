@@ -72,11 +72,11 @@ public class lunachat_like {
         // ネットワーク処理は重たいため、必ず別スレッドで実行する
         new Thread(() -> {
             
-            System.out.println("[thelow_items_hud]最新バージョンを確認します...");
+            System.out.println("[lunachat_like]最新バージョンを確認します...");
             VersionResponse apiResponse = getVersionData();
 
             if (apiResponse == null) {
-                System.out.println("[thelow_items_hud]バージョンのチェックに失敗しました");
+                System.out.println("[lunachat_like]バージョンのチェックに失敗しました");
                 return;
             }
 
@@ -84,7 +84,7 @@ public class lunachat_like {
             the_status = apiResponse.currentStatus;
             CustomMsg = apiResponse.CustomMsg;
 
-            System.out.println("[thelow_items_hud]this_version: "+ VERSION_STRING+",status: " + the_status +",latest: " + latestver);
+            System.out.println("[lunachat_like]this_version: "+ VERSION_STRING+",status: " + the_status +",latest: " + latestver);
             
         }).start();
 		
@@ -110,7 +110,7 @@ public class lunachat_like {
             int responseCode = conn.getResponseCode();
             String responsemsg = conn.getResponseMessage();
             if (responseCode != HttpURLConnection.HTTP_OK) {
-                System.out.println("[thelow_items_hud]レスポンス: " + responseCode+":"+responsemsg);
+                System.out.println("[lunachat_like]レスポンス: " + responseCode+":"+responsemsg);
                 return null; // 失敗
             }
 
@@ -127,7 +127,7 @@ public class lunachat_like {
             // --- ★ ここからがJSONパース処理 ---
             String jsonString = result.toString();
             if (jsonString.isEmpty()) {
-                System.out.println("[thelow_quest_helper]APIレスポンスが空でした。");
+                System.out.println("[lunachat_like]APIレスポンスが空でした。");
                 return null;
             }
 
@@ -139,13 +139,13 @@ public class lunachat_like {
 
         } catch (JsonSyntaxException e) {
             // JSONの形式が間違っていた場合 (例: GASがエラーHTMLを返した)
-            System.out.println("[thelow_items_hud]JSONのパースに失敗しました。");
+            System.out.println("[lunachat_like]JSONのパースに失敗しました。");
             e.printStackTrace();
             return null; // 失敗
             
         } catch (Exception e) {
             // タイムアウト、URL間違い、ネットワーク接続なし など
-            System.out.println("[thelow_items_hud]バージョンチェック中に例外が発生しました。");
+            System.out.println("[lunachat_like]バージョンチェック中に例外が発生しました。");
             e.printStackTrace();
             return null; // 失敗
             
