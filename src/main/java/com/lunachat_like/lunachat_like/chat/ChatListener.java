@@ -9,22 +9,34 @@ import com.lunachat_like.lunachat_like.config.LunachatLikeConfig;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
+
+class chatlogs{
+	String log;
+	int ID;
+	int count;
+	chatlogs() {
+		this.log = "なし";
+		this.ID = 0;
+		this.count = 1;
+	}
+}
 
 public class ChatListener {
 	private static final Minecraft mc = Minecraft.getMinecraft();
 	public static boolean debugmode = false;
 	public static boolean stackmode = false;
-	private static String chatlog[] = new String[10];
-	private static String doublechat = "";
-	private static int timer = 0;
-	private static boolean showHUD = false;
+	private static chatlogs chatlog[] = new chatlogs[10];
+	static {
+	    for (int i = 0; i < chatlog.length; i++) {
+	        chatlog[i] = new chatlogs();
+	    }
+	}
+	private static int magicID = 0;
 	private static final Map<String, String> ROMAJI_MAP = new LinkedHashMap<>();
 
     static {
@@ -259,48 +271,32 @@ public class ChatListener {
     	Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(text));
     	return;
     }
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void ChatStack(ClientChatReceivedEvent event) {
     	
     	if(!stackmode||event.message==null)return;
-    	final String colormessage = event.message.getUnformattedText();
-    	for(final String log : chatlog) {
-    		if(colormessage.equals(log)) {
+    	final String colormessage = event.message.getFormattedText();
+    	final String message = event.message.getUnformattedText();
+    	if(message.equals(""))return;
+    	for(chatlogs thelog :chatlog) {
+    		if(colormessage.replaceAll("[0-9]", "").equals(thelog.log.replaceAll("[0-9]", ""))) {
+    			thelog.log = colormessage;
+    			if(thelog.ID==0) {
+    				magicID--;
+    				thelog.ID=magicID;
+    			}
     			event.setCanceled(true);
-    			doublechat = colormessage;
-    			timer = 100;
+    			thelog.count++;
+    			final GuiNewChat chat = mc.ingameGUI.getChatGUI();
+    			chat.printChatMessageWithOptionalDeletion(new ChatComponentText(thelog.log+"("+thelog.count+")"), thelog.ID);
     		}
     	}
+    	if(event.isCanceled())return;
+    	chatlogs thislog = new chatlogs();
+    	thislog.log = colormessage;
     	for(int i=9;0<i;i--) {
     		chatlog[i] = chatlog[i-1];
     	}
-    	chatlog[0] = colormessage;
-    }
-    @SubscribeEvent
-    public void ontick(TickEvent.ClientTickEvent event) {
-    	if (event.phase == TickEvent.Phase.START) return;
-    	if(timer<=0) {
-    		showHUD = false;
-    		timer = 0;
-    		return;
-    	}
-    	showHUD = true;
-    	timer--;
-    }
-    @SubscribeEvent
-    public void HUDRender(RenderGameOverlayEvent.Text event) {
-    	if(!showHUD||mc.fontRendererObj==null)return;
-    	final int x = 10;
-    	final int y = 100;
-    	final String text = "キャンセルしました"+doublechat;
-    	final int textWidth = mc.fontRendererObj.getStringWidth(text);
-    	final int textHeight = mc.fontRendererObj.FONT_HEIGHT;
-    	final int padding = 2;
-    	Gui.drawRect(x - padding, y - padding, x + textWidth + padding, y + textHeight + padding, 0x50000000);
-    	
-    	
-    	GlStateManager.pushMatrix();
-    	mc.fontRendererObj.drawStringWithShadow(text , x, y, 0xFFFFFF);
-    	GlStateManager.popMatrix();
+    	chatlog[0] = thislog;
     }
 }
