@@ -127,6 +127,7 @@ public class LunachatLikeChannels extends CommandBase {
                 sendmsg("§6/ch autosend§7 - チャット送信時に自動でチャンネルが切り替わる機能のon/offを切り替えます",sender);
                 sendmsg("§6/ch autores§7 - チャット受信時に自動でチャンネルが切り替わる機能のon/offを切り替えます",sender);
                 sendmsg("§6/ch hud <x> <y>§7 - チャンネル表示座標を設定します",sender);
+                sendmsg("§6/ch info§7 - 発言先を確認します",sender);
                 sendmsg("§6/ch all§7 - 発言先を全体チャットにします",sender);
                 sendmsg("§6/ch clan§7 - 発言先をクランチャットにします",sender);
                 sendmsg("§6/ch party§7 - 発言先をパーティチャットにします",sender);
