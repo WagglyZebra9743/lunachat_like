@@ -27,7 +27,7 @@ public class LunachatLikeConfig {
         config = new Configuration(configFile);
         config.load();
         
-        enableReceive = config.get(CATEGORY_GENERAL, "enableRecive" , true ,"受信チャットをローマ字変換するか").getBoolean();
+        enableReceive = config.get(CATEGORY_GENERAL, "enableReceive" , true ,"受信チャットをローマ字変換するか").getBoolean();
         enableSend = config.get(CATEGORY_GENERAL, "enableSend", true,"送信チャットをローマ字変換するか").getBoolean();
         
         autesend = config.get(CATEGORY_GENERAL, "autesend", false,"送信時の自動チャンネル切り替え").getBoolean();

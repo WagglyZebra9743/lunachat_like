@@ -21,7 +21,7 @@ public class LunachatLikeGuiConfig extends GuiConfig {
         super.onGuiClosed();
         // GUIでの変更を反映
         LunachatLikeConfig.enableReceive = LunachatLikeConfig.getConfig().get(LunachatLikeConfig.CATEGORY_GENERAL,"enableReceive",true).getBoolean();
-        LunachatLikeConfig.enableSend = LunachatLikeConfig.getConfig().get(LunachatLikeConfig.CATEGORY_GENERAL,"enebleSend",true).getBoolean();
+        LunachatLikeConfig.enableSend = LunachatLikeConfig.getConfig().get(LunachatLikeConfig.CATEGORY_GENERAL,"enableSend",true).getBoolean();
         
         LunachatLikeConfig.autesend = LunachatLikeConfig.getConfig().get(LunachatLikeConfig.CATEGORY_GENERAL,"autesend",false).getBoolean();
         LunachatLikeConfig.auteres = LunachatLikeConfig.getConfig().get(LunachatLikeConfig.CATEGORY_GENERAL,"auteres",false).getBoolean();
