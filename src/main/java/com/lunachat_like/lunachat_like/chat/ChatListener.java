@@ -5,24 +5,33 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.lunachat_like.lunachat_like.lunachat_like;
 import com.lunachat_like.lunachat_like.config.LunachatLikeConfig;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiNewChat;
+import net.minecraft.event.ClickEvent;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 class chatlogs{
 	String log;
+	IChatComponent ChatComponentLog;
 	int ID;
 	int count;
+	int timer;
 	chatlogs() {
 		this.log = "なし";
+		this.ChatComponentLog = new ChatComponentText("");
 		this.ID = 0;
 		this.count = 1;
+		this.timer = 0;
 	}
 }
 
@@ -30,6 +39,8 @@ public class ChatListener {
 	private static final Minecraft mc = Minecraft.getMinecraft();
 	public static boolean debugmode = false;
 	public static boolean stackmode = false;
+    private static boolean version_Checked = false;
+    private static int SendVersionTimer = 0;
 	private static chatlogs chatlog[] = new chatlogs[10];
 	static {
 	    for (int i = 0; i < chatlog.length; i++) {
@@ -199,17 +210,17 @@ public class ChatListener {
     	if(LunachatLikeConfig.auteres) {
     		if(colormessage.startsWith("§r§a[P]")&&!LunachatLikeConfig.channel.equals("p")) {
         		LunachatLikeConfig.channel = "p";
-        		sendchat("§f[§aLCL§f]デフォルトの発言先をパーティーチャットに変更しました",mc.thePlayer);
+        		sendchat("§f[§aLCL§f]デフォルトの発言先をパーティーチャットに変更しました");
         		LunachatLikeConfig.saveConfig();
         	}
     		if(colormessage.startsWith("§r§b[ClanChat]")&&!LunachatLikeConfig.channel.equals("clan msg")) {
     			LunachatLikeConfig.channel = "clan msg";
-    			sendchat("§f[§aLCL§f]デフォルトの発言先をクランチャットに変更しました",mc.thePlayer);
+    			sendchat("§f[§aLCL§f]デフォルトの発言先をクランチャットに変更しました");
     			LunachatLikeConfig.saveConfig();
     		}
     		if(colormessage.startsWith("§r§a[GroupChat]")&&!LunachatLikeConfig.channel.equals("group")) {
     			LunachatLikeConfig.channel = "group";
-    			sendchat("§f[§aLCL§f]デフォルトの発言先をグループ(近距離)チャットに変更しました",mc.thePlayer);
+    			sendchat("§f[§aLCL§f]デフォルトの発言先をグループ(近距離)チャットに変更しました");
     			LunachatLikeConfig.saveConfig();
     		}
     		if(colormessage.contains("からささやかれました")&&colormessage.endsWith("§r")&&colormessage.startsWith("§r§o§7")) {
@@ -221,7 +232,7 @@ public class ChatListener {
     	            final String mcid = matcher.group(1);
     	            if(!LunachatLikeConfig.channel.equals("tell "+mcid)) {
     	            	LunachatLikeConfig.channel = "tell "+mcid;
-        	            sendchat("§f[§aLCL§f]デフォルトの発言先を"+mcid+"との個人チャットに変更しました",mc.thePlayer);
+        	            sendchat("§f[§aLCL§f]デフォルトの発言先を"+mcid+"との個人チャットに変更しました");
         	            LunachatLikeConfig.saveConfig();
     	            }
     	        }else {
@@ -266,37 +277,135 @@ public class ChatListener {
     	event.message.appendSibling(new ChatComponentText(" §6(" + kanjimessage + ")"));
 
         }
-    private static void sendchat(String text,EntityPlayerSP thePlayer) {
-    	if(thePlayer==null)return;
-    	Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(text));
+    private static void sendchat(String text) {
+    	if(mc.thePlayer==null)return;
+    	mc.thePlayer.addChatMessage(new ChatComponentText(text));
     	return;
     }
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void ChatStack(ClientChatReceivedEvent event) {
     	
-    	if(!stackmode||event.message==null)return;
+    	if(!stackmode||event.message==null||event.type==2)return;
+    	if (event.isCanceled()) return;
     	final String colormessage = event.message.getFormattedText();
     	final String message = event.message.getUnformattedText();
+    	if(message.startsWith("$api"))return;
     	if(message.equals(""))return;
-    	for(chatlogs thelog :chatlog) {
-    		if(colormessage.replaceAll("[0-9]", "").equals(thelog.log.replaceAll("[0-9]", ""))) {
+    	for(int i = 0; i < chatlog.length; i++) {
+    		final chatlogs thelog = chatlog[i];
+    		if (thelog == null) continue;
+    		if(colormessage.replaceAll("[0-9]", "").equals(thelog.log.replaceAll("[0-9]", ""))&&thelog.timer>0) {
     			thelog.log = colormessage;
     			if(thelog.ID==0) {
     				magicID--;
     				thelog.ID=magicID;
     			}
+    			thelog.ChatComponentLog = event.message.createCopy();
     			event.setCanceled(true);
     			thelog.count++;
+    			thelog.timer=200;
+    			IChatComponent stackedMessage = thelog.ChatComponentLog.createCopy();
+    			IChatComponent countComponent = new ChatComponentText(" (" + thelog.count + ")");
+    			stackedMessage.appendSibling(countComponent);
     			final GuiNewChat chat = mc.ingameGUI.getChatGUI();
-    			chat.printChatMessageWithOptionalDeletion(new ChatComponentText(thelog.log+"("+thelog.count+")"), thelog.ID);
+    			if (chat != null) {
+    			    chat.printChatMessageWithOptionalDeletion(stackedMessage, thelog.ID);
+    			}
+    			if (i > 0) {
+                    // i番目のログを退避
+                    chatlogs matchedLog = chatlog[i];
+                    // 0番目からi-1番目を、1番目からi番目にずらす
+                    for (int j = i; j > 0; j--) {
+                        chatlog[j] = chatlog[j-1];
+                    }
+                    // 先頭に置く
+                    chatlog[0] = matchedLog;
+                }
+    			return;
     		}
     	}
-    	if(event.isCanceled())return;
-    	chatlogs thislog = new chatlogs();
+    	final chatlogs thislog = new chatlogs();
     	thislog.log = colormessage;
+    	thislog.ChatComponentLog = event.message;
+    	thislog.timer = 200;
     	for(int i=9;0<i;i--) {
     		chatlog[i] = chatlog[i-1];
     	}
     	chatlog[0] = thislog;
+    }
+    @SubscribeEvent
+    public void timer(TickEvent.ClientTickEvent event) {
+    	if (event.phase == TickEvent.Phase.START)return;
+    	if(SendVersionTimer>0&&!version_Checked) {
+    		SendVersionTimer--;
+        	if(SendVersionTimer<=0&&!version_Checked)SendVersionText();
+    	}
+
+    	if(!stackmode)return;
+    	for(chatlogs thelog : chatlog) {
+    		if(thelog.timer>0)thelog.timer--;
+    	}
+    }
+    
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void SendVersionMsg(ClientChatReceivedEvent event) {
+    	if(version_Checked)return;
+    	final String colormsg = event.message.getFormattedText();
+    	if(LunachatLikeConfig.AutoVersionCheck&&colormsg.startsWith("§r§a倉庫データを取得しました")) {
+    		SendVersionTimer = 40;
+        }
+    }
+    
+    private static void SendVersionText() {
+		if(lunachat_like.latestver.equals(""))return;
+		version_Checked = true;
+		int status = lunachat_like.the_status;
+		if(lunachat_like.CustomMsg!=null&&!lunachat_like.CustomMsg.equals("")&&!lunachat_like.CustomMsg.equals("OK")) {
+			sendchat("§a[lunachat_like]" + lunachat_like.CustomMsg);
+		}
+		if(status==-1)return;
+		switch (status){
+			case 0:{//安定バージョン
+				sendchat("§a[lunachat_like]§7新バージョンが利用可能です"+lunachat_like.VERSION_STRING+"→"+lunachat_like.latestver);
+				sendClickableLink("https://github.com/WagglyZebra9743/lunachat_like/releases/latest");
+				return;
+			}
+			case 1:{//特殊な使い方をすると不具合が出る
+				sendchat("§a[lunachat_like]§e軽微な不具合があるバージョンです");
+				sendchat("§e新バージョンが利用可能です"+lunachat_like.VERSION_STRING+"→"+lunachat_like.latestver);
+				sendClickableLink("https://github.com/WagglyZebra9743/lunachat_like/releases/latest");
+				return;
+			}
+			case 2:{//人によっては表示が崩れる等の不具合が出る
+				sendchat("§a[lunachat_like]§6中程度な不具合があるバージョンです");
+				sendchat("§6新バージョンが利用可能です"+lunachat_like.VERSION_STRING+"→"+lunachat_like.latestver);
+				sendClickableLink("https://github.com/WagglyZebra9743/lunachat_like/releases/latest");
+				return;
+			}
+			case 3:{//不具合が出るしクラッシュ等も起きる
+				sendchat("§a[lunachat_like]§c重大な不具合があるバージョンです");
+				sendchat("§c新バージョンに更新することを推奨します"+lunachat_like.VERSION_STRING+"→"+lunachat_like.latestver);
+				sendClickableLink("https://github.com/WagglyZebra9743/lunachat_like/releases/latest");
+				return;
+			}
+		}
+    }
+    private static void sendClickableLink(final String url) {
+    	
+        IChatComponent component = new ChatComponentText(url);
+
+        ChatStyle style = new ChatStyle();
+        
+        final ClickEvent clickEvent = new ClickEvent(ClickEvent.Action.OPEN_URL, url);
+        style.setChatClickEvent(clickEvent);
+        
+        style.setColor(EnumChatFormatting.AQUA); // 水色にする
+        style.setUnderlined(true); // 下線を引く
+
+        component.setChatStyle(style);
+
+        if (mc.thePlayer != null) {
+            mc.thePlayer.addChatMessage(component);
+        }
     }
 }
