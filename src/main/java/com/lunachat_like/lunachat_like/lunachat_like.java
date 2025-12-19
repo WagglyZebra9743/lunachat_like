@@ -24,7 +24,7 @@ import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = "lunachat_like", version = "1.6",guiFactory = "com.lunachat_like.lunachat_like.config.GuiFactory")
+@Mod(modid = "lunachat_like", version = "1.7",guiFactory = "com.lunachat_like.lunachat_like.config.GuiFactory")
 public class lunachat_like {
 	public static boolean enable = true;
 	public static String MOD_ID;

@@ -27,7 +27,7 @@ public class LunachatLikeConfig {
         config = new Configuration(configFile);
         config.load();
         
-        enableReceive = config.get(CATEGORY_GENERAL, "enableRecive" , true ,"受信チャットをローマ字変換するか").getBoolean();
+        enableReceive = config.get(CATEGORY_GENERAL, "enableReceive" , true ,"受信チャットをローマ字変換するか").getBoolean();
         enableSend = config.get(CATEGORY_GENERAL, "enableSend", true,"送信チャットをローマ字変換するか").getBoolean();
         
         autesend = config.get(CATEGORY_GENERAL, "autesend", false,"送信時の自動チャンネル切り替え").getBoolean();
@@ -53,8 +53,8 @@ public class LunachatLikeConfig {
         config.get(Configuration.CATEGORY_GENERAL, "channel", "all","デフォルトの発言先").set(channel);
         config.get(Configuration.CATEGORY_GENERAL, "hudX", 5, "発言先表示のX座標").set(hudX);
         config.get(Configuration.CATEGORY_GENERAL, "hudY", 5, "発言先表示のY座標").set(hudY);
-        config.get(CATEGORY_GENERAL, "AutoVersionCheck", true,DEFAULT_VERSIONCHECK_TEXT).set(AutoVersionCheck);
-        config.get(CATEGORY_GENERAL, "SendMCID", false,DEFAULT_SENDMCID_TEXT).set(SendMCID);
+        config.get(Configuration.CATEGORY_GENERAL, "AutoVersionCheck", true,DEFAULT_VERSIONCHECK_TEXT).set(AutoVersionCheck);
+        config.get(Configuration.CATEGORY_GENERAL, "SendMCID", false,DEFAULT_SENDMCID_TEXT).set(SendMCID);
         if (config.hasChanged()) {
             config.save();
         }
